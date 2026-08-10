@@ -5,6 +5,8 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import java.util.Properties
+import java.io.FileInputStream
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -12,12 +14,27 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             plugins.apply("com.android.application")
             plugins.apply("mongez.compose")
 
+            val localProperties = Properties()
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                localProperties.load(FileInputStream(localPropertiesFile))
+            }
+            val googleWebClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID", "")
+            val baseUrl = localProperties.getProperty("BASE_URL", "")
+
             extensions.configure<ApplicationExtension> {
                 compileSdk = 37
 
                 defaultConfig {
                     minSdk = 26
                     targetSdk = 37
+
+                    buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleWebClientId\"")
+                    buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                }
+
+                buildFeatures {
+                    buildConfig = true
                 }
 
                 signingConfigs {
