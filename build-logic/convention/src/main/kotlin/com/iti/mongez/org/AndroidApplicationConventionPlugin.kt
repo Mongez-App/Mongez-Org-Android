@@ -20,6 +20,21 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                     targetSdk = 37
                 }
 
+                signingConfigs {
+                    getByName("debug") {
+                        storeFile = rootProject.file("keystore/debug.keystore")
+                        storePassword = "android"
+                        keyAlias = "androiddebugkey"
+                        keyPassword = "android"
+                    }
+                }
+
+                buildTypes {
+                    getByName("debug") {
+                        signingConfig = signingConfigs.getByName("debug")
+                    }
+                }
+
                 compileOptions {
                     sourceCompatibility = JavaVersion.VERSION_11
                     targetCompatibility = JavaVersion.VERSION_11
