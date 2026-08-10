@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.iti.mongez.designsystem"
+    namespace = "com.iti.mongez.org.designsystem"
 }
 
 dependencies {

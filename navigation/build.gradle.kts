@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.iti.mongez.navigation"
+    namespace = "com.iti.mongez.org.navigation"
 }
 
 dependencies {
@@ -13,7 +13,7 @@ dependencies {
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
-    
+
     implementation(libs.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 }

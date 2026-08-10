@@ -1,0 +1,92 @@
+package com.iti.mongez.org.designsystem.components.avatar
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.iti.mongez.org.designsystem.theme.MongezTheme
+import com.iti.mongez.org.designsystem.theme.Theme
+
+/**
+ * Avatar component with initials or placeholder.
+ *
+ * @param modifier Modifier.
+ * @param initials One or two letter initials to display.
+ * @param size Diameter of the avatar.
+ * @param textStyle Style for the initials text.
+ * @param onClick Optional click callback.
+ */
+@Composable
+fun AppAvatar(
+    modifier: Modifier = Modifier,
+    imageUrl: String? = null,
+    initials: String? = null,
+    size: Dp = 40.dp,
+    textStyle: TextStyle = Theme.typography.label.medium,
+    onClick: (() -> Unit)? = null,
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape)
+            .then(
+                if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
+            )
+            .background(Theme.colorScheme.brand.primaryContainer),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (!imageUrl.isNullOrEmpty()) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = "Profile",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else if (initials != null) {
+            Text(
+                text = initials.take(2).uppercase(),
+                style = textStyle,
+                color = Theme.colorScheme.brand.onPrimaryContainer,
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Rounded.Person,
+                contentDescription = "Profile",
+                tint = Theme.colorScheme.brand.onPrimaryContainer,
+                modifier = Modifier.size(size * 0.6f),
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, name = "Avatars")
+@Composable
+private fun AvatarPreview() {
+    MongezTheme {
+        androidx.compose.foundation.layout.Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
+        ) {
+            AppAvatar(initials = "AB")
+            AppAvatar(initials = "M")
+            AppAvatar() // Placeholder
+        }
+    }
+}
