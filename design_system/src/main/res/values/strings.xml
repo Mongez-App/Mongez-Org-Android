@@ -20,4 +20,80 @@
     <string name="action_ok">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="cd_close">Close</string>
+
+    <!-- Auth - Login -->
+    <string name="login_welcome_back">Welcome Back</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_email_hint">Enter your email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_hint">Enter your password</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="login_or">or</string>
+    <string name="login_google_sign_in">Sign in with Google</string>
+    <string name="login_no_account">Don\'t have an account? </string>
+    <string name="login_sign_up">Sign up</string>
+
+    <!-- Auth - Register Shared -->
+    <string name="register_next">Next</string>
+    <string name="register_back">Back</string>
+    <string name="register_submit">Submit</string>
+
+    <!-- Auth - Register Step 1 -->
+    <string name="register_create_account">Create Account</string>
+    <string name="register_org_name_label">Organization Name</string>
+    <string name="register_org_name_hint">Enter organization name</string>
+    <string name="register_confirm_password_label">Confirm Password</string>
+    <string name="register_confirm_password_hint">Confirm your password</string>
+
+    <!-- Auth - Register Step 2 -->
+    <string name="register_basic_info">Basic Info</string>
+    <string name="register_add_logo">Add Logo</string>
+    <string name="register_industry_label">Industry Field</string>
+    <string name="register_industry_hint">Select industry</string>
+    <string name="register_industry_tech">Technology</string>
+    <string name="register_industry_edu">Education</string>
+    <string name="register_industry_health">Healthcare</string>
+    <string name="register_industry_finance">Finance</string>
+    <string name="register_industry_retail">Retail</string>
+    <string name="register_industry_manufacturing">Manufacturing</string>
+    <string name="register_industry_nonprofit">Non-Profit</string>
+    <string name="register_industry_gov">Government</string>
+    <string name="register_industry_media">Media</string>
+    <string name="register_industry_other">Other</string>
+    <string name="register_desc_label">Description (Optional)</string>
+    <string name="register_desc_hint">Tell us about your organization</string>
+
+    <!-- Auth - Register Step 3 -->
+    <string name="register_services_audience">Services &amp; Audience</string>
+    <string name="register_target_audience_label">Target Audience</string>
+    <string name="register_target_audience_hint">E.g., Students, Startups</string>
+    <string name="register_services_label">Services Provided</string>
+    <string name="register_services_hint">E.g., Mentorship, Funding</string>
+    <string name="register_members_count_label">Number of Members</string>
+    <string name="register_members_count_hint">Enter members count</string>
+
+    <!-- Auth - Register Step 4 -->
+    <string name="register_contact_location">Contact &amp; Location</string>
+    <string name="register_contact_email_label">Contact Email</string>
+    <string name="register_contact_email_hint">Enter contact email</string>
+    <string name="register_phone_label">Phone Number</string>
+    <string name="register_phone_hint">Enter phone number</string>
+    <string name="register_website_label">Website URL (Optional)</string>
+    <string name="register_website_hint">Enter website URL</string>
+    <string name="register_address_label">Address</string>
+    <string name="register_address_hint">Enter address</string>
+    <string name="register_select_location">Select location on map</string>
+    <string name="register_reg_number_label">Registration Number (Optional)</string>
+    <string name="register_reg_number_hint">Enter registration number</string>
+    <string name="register_documents_label">Documents (Optional)</string>
+    <string name="register_documents_hint">Document URL</string>
+
+    <!-- Auth - Review -->
+    <string name="review_verified">Verified!</string>
+    <string name="review_verified_desc">Congratulations! Your request has been reviewed and accepted.</string>
+    <string name="review_go_to_dashboard">Go to Dashboard</string>
+    <string name="review_under_review">Under Review</string>
+    <string name="review_under_review_desc">Your request to join Mongez is under review by Mongez admins. We will notify you once verified.</string>
+    <string name="review_back_to_login">Back to Login</string>
 </resources>

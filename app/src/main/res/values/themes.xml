@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.MongezOrg" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.MongezOrg.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@android:color/white</item>
+        <item name="windowSplashScreenIconBackgroundColor">@android:color/white</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/application_icon_only</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="postSplashScreenTheme">@style/Theme.MongezOrg</item>
+    </style>
 </resources>

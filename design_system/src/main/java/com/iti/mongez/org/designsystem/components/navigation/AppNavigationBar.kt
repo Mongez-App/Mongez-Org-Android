@@ -113,7 +113,7 @@ fun AppNavigationBar(
                             .size(Theme.spacing.xs)
                             .clip(CircleShape)
                             .background(
-                                color = if (isSelected) Theme.colorScheme.navigation.activeIcon else Color.Transparent
+                                color = if (isSelected) Theme.colorScheme.brand.primary else Color.Transparent
                             )
                     )
                 }

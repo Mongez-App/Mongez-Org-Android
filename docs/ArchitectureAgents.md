@@ -58,3 +58,4 @@ When adding a new dependency, it must be added to the version catalog file (`gra
 - **Component Reusability:** When creating generic UI elements (like `MemberCard`), place them directly in the `design_system` module rather than duplicating them locally inside presentation screens.
 - **No Hardcoded Values:** Do not use hardcoded dimensions (dp/sp), colors, or alpha values in the UI. Always use `Theme.spacing.*`, `Theme.colorScheme.*`, `Theme.typography.*`, and `Theme.radius.*` from the design system to ensure consistency.
 - **Compose Previews:** Every screen must include a `@Preview` function to visualize its layout and state easily during development. Provide dummy data that reflects a realistic state.
+- **Package Structure:** Feature modules must be structured with `contract/`, `uiState/`, `view/`, and `viewmodel/` sub-packages to separate MVI components.

@@ -15,4 +15,6 @@ dependencies {
     implementation(libs.google.gson)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.firebase.auth)
+    implementation(libs.logging.interceptor)
 }

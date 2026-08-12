@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "742434995178",
+    "project_id": "mongez-56da8",
+    "storage_bucket": "mongez-56da8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742434995178:android:a2195259aead049f119093",
+        "android_client_info": {
+          "package_name": "com.iti.mongez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742434995178-q3tjpjd6c7gotbot7egra8ivvd038cu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.mongez",
+            "certificate_hash": "8e381805d9d531e4e78a3c65f877a2c688b73cad"
+          }
+        },
+        {
+          "client_id": "742434995178-n97nog1sfj6o7erprjmbhto0omqkdad0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsSSJduW1FEyCeuUbuHE-r_i9R6ISmKOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742434995178-n97nog1sfj6o7erprjmbhto0omqkdad0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "742434995178-ni4uf79po860ak5h4hh7iaguj81guvoi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "iti.Mongez"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742434995178:android:4d3dd9098ebbfa4f119093",
+        "android_client_info": {
+          "package_name": "com.iti.mongez.org"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742434995178-db4mhd2tseon2mofhmb1fikrd3ob4hm8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iti.mongez.org",
+            "certificate_hash": "d7535af8732840e9998097dda707f271b9b26dc2"
+          }
+        },
+        {
+          "client_id": "742434995178-n97nog1sfj6o7erprjmbhto0omqkdad0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsSSJduW1FEyCeuUbuHE-r_i9R6ISmKOs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742434995178-n97nog1sfj6o7erprjmbhto0omqkdad0.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "742434995178-ni4uf79po860ak5h4hh7iaguj81guvoi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "iti.Mongez"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

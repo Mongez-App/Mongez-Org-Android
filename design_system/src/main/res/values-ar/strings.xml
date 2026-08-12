@@ -21,4 +21,80 @@
     <string name="action_ok">موافق</string>
     <string name="action_cancel">إلغاء</string>
     <string name="cd_close">إغلاق</string>
+
+    <!-- Auth - Login -->
+    <string name="login_welcome_back">مرحباً بك مجدداً</string>
+    <string name="login_email_label">البريد الإلكتروني</string>
+    <string name="login_email_hint">أدخل بريدك الإلكتروني</string>
+    <string name="login_password_label">كلمة المرور</string>
+    <string name="login_password_hint">أدخل كلمة المرور</string>
+    <string name="login_forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="login_sign_in">تسجيل الدخول</string>
+    <string name="login_or">أو</string>
+    <string name="login_google_sign_in">تسجيل الدخول باستخدام جوجل</string>
+    <string name="login_no_account">ليس لديك حساب؟ </string>
+    <string name="login_sign_up">إنشاء حساب</string>
+
+    <!-- Auth - Register Shared -->
+    <string name="register_next">التالي</string>
+    <string name="register_back">رجوع</string>
+    <string name="register_submit">تأكيد</string>
+
+    <!-- Auth - Register Step 1 -->
+    <string name="register_create_account">إنشاء حساب</string>
+    <string name="register_org_name_label">اسم المؤسسة</string>
+    <string name="register_org_name_hint">أدخل اسم المؤسسة</string>
+    <string name="register_confirm_password_label">تأكيد كلمة المرور</string>
+    <string name="register_confirm_password_hint">قم بتأكيد كلمة المرور</string>
+
+    <!-- Auth - Register Step 2 -->
+    <string name="register_basic_info">المعلومات الأساسية</string>
+    <string name="register_add_logo">إضافة شعار</string>
+    <string name="register_industry_label">مجال العمل</string>
+    <string name="register_industry_hint">اختر المجال</string>
+    <string name="register_industry_tech">التكنولوجيا</string>
+    <string name="register_industry_edu">التعليم</string>
+    <string name="register_industry_health">الرعاية الصحية</string>
+    <string name="register_industry_finance">المالية</string>
+    <string name="register_industry_retail">البيع بالتجزئة</string>
+    <string name="register_industry_manufacturing">التصنيع</string>
+    <string name="register_industry_nonprofit">مؤسسة غير ربحية</string>
+    <string name="register_industry_gov">حكومي</string>
+    <string name="register_industry_media">الإعلام</string>
+    <string name="register_industry_other">أخرى</string>
+    <string name="register_desc_label">الوصف (اختياري)</string>
+    <string name="register_desc_hint">أخبرنا عن مؤسستك</string>
+
+    <!-- Auth - Register Step 3 -->
+    <string name="register_services_audience">الخدمات والجمهور</string>
+    <string name="register_target_audience_label">الجمهور المستهدف</string>
+    <string name="register_target_audience_hint">مثال: الطلاب، الشركات الناشئة</string>
+    <string name="register_services_label">الخدمات المقدمة</string>
+    <string name="register_services_hint">مثال: التوجيه، التمويل</string>
+    <string name="register_members_count_label">عدد الأعضاء</string>
+    <string name="register_members_count_hint">أدخل عدد الأعضاء</string>
+
+    <!-- Auth - Register Step 4 -->
+    <string name="register_contact_location">التواصل والموقع</string>
+    <string name="register_contact_email_label">البريد الإلكتروني للتواصل</string>
+    <string name="register_contact_email_hint">أدخل البريد الإلكتروني للتواصل</string>
+    <string name="register_phone_label">رقم الهاتف</string>
+    <string name="register_phone_hint">أدخل رقم الهاتف</string>
+    <string name="register_website_label">رابط الموقع (اختياري)</string>
+    <string name="register_website_hint">أدخل رابط الموقع</string>
+    <string name="register_address_label">العنوان</string>
+    <string name="register_address_hint">أدخل العنوان</string>
+    <string name="register_select_location">حدد الموقع على الخريطة</string>
+    <string name="register_reg_number_label">رقم التسجيل (اختياري)</string>
+    <string name="register_reg_number_hint">أدخل رقم التسجيل</string>
+    <string name="register_documents_label">المستندات (اختياري)</string>
+    <string name="register_documents_hint">رابط المستند</string>
+
+    <!-- Auth - Review -->
+    <string name="review_verified">تم التحقق!</string>
+    <string name="review_verified_desc">تهانينا! تمت مراجعة طلبك وقبوله.</string>
+    <string name="review_go_to_dashboard">الذهاب إلى لوحة التحكم</string>
+    <string name="review_under_review">قيد المراجعة</string>
+    <string name="review_under_review_desc">طلب انضمامك إلى منجز قيد المراجعة من قبل مسؤولي منجز. سنعلمك بمجرد التحقق.</string>
+    <string name="review_back_to_login">الرجوع لتسجيل الدخول</string>
 </resources>
