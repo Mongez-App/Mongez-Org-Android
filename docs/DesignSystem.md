@@ -1,4 +1,4 @@
-# AI Learning Assistant
+# MongezOrg - Organization Management
 # Design System Documentation
 
 > **Version:** 1.0.0  
@@ -225,23 +225,28 @@ App
 │
 ├── app
 │
+├── build-logic
+│   └── convention
+│
 ├── core
-│   ├── design-system
-│   ├── common
-│   ├── ui
+│   ├── design_system
 │   └── navigation
 │
-├── feature-auth
-├── feature-home
-├── feature-course
-├── feature-roadmap
-├── feature-profile
+├── presentation
+│   ├── auth
+│   ├── onboarding
+│   ├── dashboard
+│   ├── teams
+│   ├── courses
+│   ├── members
+│   ├── events
+│   ├── tasks
+│   ├── profile
+│   └── magicbox
 │
 ├── data
 │
-├── domain
-│
-└── presentation
+└── domain
 ```
 
 ---
@@ -307,21 +312,20 @@ Everything should come from the Design System.
 # Dependency Graph
 
 ```
-feature-home
-        │
+teams
         │
         ▼
-design-system
+design_system
 
-feature-auth
+courses
         │
         ▼
-design-system
+design_system
 
-feature-course
+members
         │
         ▼
-design-system
+design_system
 ```
 
 Every feature depends on the Design System.
