@@ -1,6 +1,7 @@
 plugins {
     id("mongez.android.application")
     id("mongez.android.hilt")
+    alias(libs.plugins.google.services)
 }
 
 android {

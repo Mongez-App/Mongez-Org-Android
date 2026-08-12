@@ -5,8 +5,8 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -21,6 +21,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             }
             val googleWebClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID", "")
             val baseUrl = localProperties.getProperty("BASE_URL", "")
+            val mapsApiKey = localProperties.getProperty("MAPS_API_KEY", "")
 
             extensions.configure<ApplicationExtension> {
                 compileSdk = 37
@@ -31,6 +32,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
                     buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleWebClientId\"")
                     buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                    manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
                 }
 
                 buildFeatures {

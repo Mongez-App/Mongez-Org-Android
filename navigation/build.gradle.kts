@@ -10,6 +10,7 @@ android {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":presentation"))
+    implementation(project(":design_system"))
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
