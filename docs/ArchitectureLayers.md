@@ -11,20 +11,23 @@ The project architecture strictly separates concerns into independent modules. T
 
 | Module Layer | Responsibility | Dependencies |
 | :--- | :--- | :--- |
-| **App** | Application class, Hilt DI initialization, Navigation host, and shared signing keystore configuration (`keystores/debug.keystore`). | Feature modules, Core modules |
+| **App** | Application class, Hilt DI initialization, Navigation host. | Feature modules, Core modules |
 | **Presentation (Features)** | MVI Contracts (State, Intent, Effect organized in `contract/`, `uiState/`, `view/`, `viewmodel/`), UI rendering. | Domain, Design System |
 | **Domain** | Pure Kotlin business logic, Hilt modules, `Result` wrapper, custom exceptions. | None (No Android dependencies) |
 | **Data** | Mappers, data sources, Retrofit network setup, `safeApi` utility, Hilt DI. | Domain |
 | **Design System** | Single source of truth for all visual elements. | Compose Foundation |
+| **Navigation** | App routes & `AppNavHost` orchestration using Navigation 3. | Domain, Presentation |
+| **Build-Logic** | Gradle convention plugins (`mongez.android.library.compose`, `mongez.android.hilt`, etc.). | Gradle API, Version Catalog |
 
 ## 2. Layer Specifications
 
 ### 2.1 The Presentation Layer (Feature Modules)
 Feature modules contain only the components necessary to bind the MVI contract to the UI.
 
-*   Contains the `ui`, `screen`, `viewmodel`, `state`, `event`, `effect`, and `mapper` directories.
+*   Contains the `view`, `viewmodel`, `contract`, and `uiState` directories.
 *   Delegates all visual styling, typography, spacing, and shapes to the Design System.
 *   Communicates with the Domain layer exclusively by dispatching intents to Use Cases and observing Flow states.
+*   Feature areas: `auth`, `onboarding`, `dashboard`, `teams`, `courses`, `members`, `events`, `tasks`, `profile`, `magicbox`.
 
 ### 2.2 The Domain Layer
 The Domain layer is the pure Kotlin core of the application, entirely agnostic of the Android framework.
@@ -37,8 +40,8 @@ The Domain layer is the pure Kotlin core of the application, entirely agnostic o
         object Loading : Result<Nothing>()
     }
     ```
-*   Contains Use Cases representing core business rules (e.g., calculating study streaks or formatting pedagogical summaries).
-*   Defines Data Classes representing core domain models (`Course`, `StudySession`, `RoadmapEvent`).
+*   Contains Use Cases representing core business rules (e.g., managing team memberships, scheduling tasks via Magic Box, approving member invitations).
+*   Defines Data Classes representing core domain models (`Organization`, `Team`, `Course`, `Member`, `Task`, `Event`).
 *   Defines App Flow Repository interfaces to be implemented by the Data layer.
 *   Houses Domain Hilt DI modules and Custom Exceptions (`AppException`, `AuthException`, `NetworkException`).
 
@@ -56,10 +59,22 @@ The Data layer coordinates the retrieval, caching, and mapping of raw data into 
 ### 2.4 The Design System Layer
 The Design System prevents UI duplication and enforces consistency. It is the single source of truth for the app's visual identity.
 
-*   Provides reusable components (e.g., `AppButton`, `AppTextField`, `CourseCard`).
+*   Provides reusable components (e.g., `AppButton`, `AppTextField`, `AppCard`, `MemberCard`, `TeamCard`).
 *   Exposes design tokens through `CompositionLocal` (e.g., `Theme.colorScheme`, `Theme.typography`, `Theme.spacing`).
 *   Contains all fonts, icons, illustrations, animations, and common UI utilities.
 *   Feature modules must never define hardcoded colors, padding, or custom text styles.
+
+### 2.5 The Build-Logic Layer
+Centralized Gradle convention plugins that eliminate boilerplate across module `build.gradle.kts` files.
+
+*   Convention plugins are pure Kotlin classes (`.kt`) under `build-logic/convention/src/main/kotlin/`.
+*   Available plugins:
+    *   `mongez.android.application` — AGP application config
+    *   `mongez.android.library` — AGP library config
+    *   `mongez.android.library.compose` — Library + Compose
+    *   `mongez.compose` — Compose BOM + Material3 + UI tooling
+    *   `mongez.android.hilt` — Hilt + KSP
+    *   `mongez.kotlin.library` — Pure Kotlin JVM library
 
 ---
 
