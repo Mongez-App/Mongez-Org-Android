@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dashboard_coming_soon">Dashboard is Coming Soon</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="choose_avatar_title">Choose Avatar</string>
+    <string name="delete">Delete</string>
+</resources>

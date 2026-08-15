@@ -1,8 +1,15 @@
 package com.iti.mongez.org.presentation.main
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,14 +19,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.iti.mongez.org.designsystem.components.navigation.AppNavigationBar
 import com.iti.mongez.org.designsystem.components.navigation.AppNavigationBarItem
 import com.iti.mongez.org.designsystem.theme.Theme
+import com.iti.mongez.org.presentation.R
+import com.iti.mongez.org.presentation.profile.ProfileScreen
+import com.iti.mongez.org.presentation.profile.ProfileViewModel
 
 @Composable
 fun MainScreen(
     onNavigateToCourseDetails: (String) -> Unit,
-    onNavigateToTeamDetails: (String) -> Unit
+    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToLogin: () -> Unit = {}
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val selectedTab = MainTab.fromIndex(selectedTabIndex)
@@ -43,7 +58,8 @@ fun MainScreen(
     ) { innerPadding ->
         MainScreenContent(
             tab = selectedTab,
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            onNavigateToLogin = onNavigateToLogin
         )
     }
 }
@@ -51,13 +67,50 @@ fun MainScreen(
 @Composable
 private fun MainScreenContent(
     tab: MainTab,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onNavigateToLogin: () -> Unit
 ) {
-    // Render the active tab content
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "${tab.name} Screen Placeholder")
+        when (tab) {
+            MainTab.Dashboard -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(Theme.spacing.xl),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_dashboard_under_construction),
+                        contentDescription = stringResource(id = R.string.dashboard_coming_soon),
+                        modifier = Modifier.size(220.dp)
+                    )
+                    Spacer(modifier = Modifier.height(Theme.spacing.lg))
+                    Text(
+                        text = stringResource(id = R.string.dashboard_coming_soon),
+                        style = Theme.typography.title.large,
+                        color = Theme.colorScheme.text.secondary
+                    )
+                }
+            }
+            MainTab.Teams -> {
+                Text(text = "Teams Screen Placeholder")
+            }
+            MainTab.Courses -> {
+                Text(text = "Courses Screen Placeholder")
+            }
+            MainTab.Profile -> {
+                val profileViewModel: ProfileViewModel = hiltViewModel()
+                ProfileScreen(
+                    viewModel = profileViewModel,
+                    onNavigateToLogin = onNavigateToLogin
+                )
+            }
+        }
     }
 }

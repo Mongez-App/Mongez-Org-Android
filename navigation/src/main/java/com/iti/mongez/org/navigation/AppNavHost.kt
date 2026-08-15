@@ -228,12 +228,16 @@ fun AppNavHost(
                     onIntent = registerViewModel::onIntent
                 )
             }
-            is AppRoute.Main -> NavEntry(AppRoute.Main) {
-                MainScreen(
-                    onNavigateToCourseDetails = { courseId -> backStack.add(AppRoute.CourseDetails(courseId)) },
-                    onNavigateToTeamDetails = { teamId -> backStack.add(AppRoute.TeamDetails(teamId)) }
-                )
-            }
+                is AppRoute.Main -> NavEntry(AppRoute.Main) {
+                    MainScreen(
+                        onNavigateToCourseDetails = { courseId -> backStack.add(AppRoute.CourseDetails(courseId)) },
+                        onNavigateToTeamDetails = { teamId -> backStack.add(AppRoute.TeamDetails(teamId)) },
+                        onNavigateToLogin = {
+                            backStack.clear()
+                            backStack.add(AppRoute.Login)
+                        }
+                    )
+                }
             is AppRoute.TeamDetails -> NavEntry(key) {
                 PlaceholderScreen("Team Details: ${key.teamId}")
             }
