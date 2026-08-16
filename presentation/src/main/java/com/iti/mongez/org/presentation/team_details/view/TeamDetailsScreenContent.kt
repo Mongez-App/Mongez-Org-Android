@@ -1,20 +1,13 @@
-package com.iti.mongez.org.presentation.teams.details.view
+package com.iti.mongez.org.presentation.team_details.view
 
 import android.graphics.Paint
-import android.util.Patterns
-import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.AutoStories
-import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,31 +20,27 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.iti.mongez.org.designsystem.components.button.AppButton
 import com.iti.mongez.org.designsystem.components.common.AppEmptyState
-import com.iti.mongez.org.designsystem.components.loading.AppShimmer
 import com.iti.mongez.org.designsystem.components.dialog.AppConfirmationDialog
 import com.iti.mongez.org.designsystem.components.search.AppSearchBar
 import com.iti.mongez.org.designsystem.components.sheet.AppBottomSheet
-import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarContent
-import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 import com.iti.mongez.org.designsystem.components.tabs.AppPrimaryTabs
 import com.iti.mongez.org.designsystem.theme.MongezTheme
 import com.iti.mongez.org.designsystem.theme.Theme
+import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.domain.team_details.model.Member
+import com.iti.mongez.org.domain.team_details.model.Team
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
 import com.iti.mongez.org.presentation.R
 import com.iti.mongez.org.presentation.courses.components.AddCourseSheetContent
 import com.iti.mongez.org.presentation.courses.components.CoursesList
-import com.iti.mongez.org.presentation.teams.details.components.AddEventSheetContent
-import com.iti.mongez.org.presentation.teams.details.components.TeamEventsList
-import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
-import com.iti.mongez.org.presentation.teams.details.uiState.TeamDetailsUiState
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.model.Member
-import com.iti.mongez.org.domain.teams.model.Team
-import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.presentation.team_details.components.AddEventSheetContent
+import com.iti.mongez.org.presentation.team_details.components.TeamEventsList
+import com.iti.mongez.org.presentation.team_details.components.TeamMembersTabContent
+import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsIntent
+import com.iti.mongez.org.presentation.team_details.uiState.TeamDetailsUiState
 
 private fun Modifier.coursesActionShadow(
     shadowColor: Color,
@@ -108,7 +97,7 @@ fun TeamDetailsScreenContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Theme.colorScheme.text.primary
                         )
                     }
@@ -154,7 +143,11 @@ fun TeamDetailsScreenContent(
                         .fillMaxSize()
                         .padding(padding)
                 ) {
-                    val tabs = listOf("Courses", "Events", "Members")
+                    val tabs = listOf(
+                        stringResource(R.string.courses),
+                        stringResource(R.string.events),
+                        stringResource(R.string.members)
+                    )
                     AppPrimaryTabs(
                         tabs = tabs,
                         selectedTabIndex = state.selectedTabIndex,
@@ -205,7 +198,12 @@ fun TeamDetailsScreenContent(
                                 events = state.events,
                                 onAddEventClick = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) }
                             )
-                            2 -> MembersList(members = state.members)
+                            2 -> TeamMembersTabContent(
+                                members = state.members,
+                                pendingMembers = state.pendingMembers,
+                                onAcceptMember = { onIntent(TeamDetailsIntent.AcceptMember(it)) },
+                                onDeclineMember = { onIntent(TeamDetailsIntent.DeclineMember(it)) }
+                            )
                         }
                     }
                 }
@@ -239,7 +237,7 @@ fun TeamDetailsScreenContent(
             if (state.isAddEventSheetVisible) {
                 AppBottomSheet(
                     onDismiss = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) },
-                    title = "Add Event"
+                    title = stringResource(R.string.add_event)
                 ) {
                     AddEventSheetContent(
                         courses = state.courses,
@@ -253,9 +251,9 @@ fun TeamDetailsScreenContent(
 
             if (state.isEventAddedSuccessfully) {
                 AppConfirmationDialog(
-                    title = "Confirmation",
-                    description = "Your Event Has Been Added Successfully",
-                    primaryActionText = "OK",
+                    title = stringResource(R.string.confirmation),
+                    description = stringResource(R.string.event_added_successfully),
+                    primaryActionText = stringResource(R.string.action_ok),
                     onPrimaryAction = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) },
                     onDismiss = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) }
                 )
@@ -264,52 +262,7 @@ fun TeamDetailsScreenContent(
     }
 }
 
-@Composable
-fun MembersList(members: List<Member>) {
-    if (members.isEmpty()) {
-        AppEmptyState(
-            title = stringResource(R.string.no_members_yet),
-            description = stringResource(R.string.no_members_desc),
-            illustration = {
-                Box(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colorScheme.brand.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Group,
-                        contentDescription = null,
-                        modifier = Modifier.size(60.dp),
-                        tint = Theme.colorScheme.brand.primary
-                    )
-                }
-            }
-        )
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(Theme.spacing.xl),
-            contentPadding = PaddingValues(top = Theme.spacing.xl, bottom = Theme.spacing.lg)
-        ) {
-            items(members) { member ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Theme.colorScheme.surface.surfaceVariant)
-                ) {
-                    Row(modifier = Modifier.padding(Theme.spacing.md)) {
-                        Column {
-                            Text(text = member.name, style = Theme.typography.title.medium, fontWeight = FontWeight.Bold)
-                            Text(text = member.role, style = Theme.typography.body.medium)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Team Details")
 @Composable
 fun TeamDetailsScreenContentPreview() {
     val sampleTeam = Team(
@@ -362,6 +315,10 @@ fun TeamDetailsScreenContentPreview() {
         Member(id = "2", name = "Sara Jones", role = "UI/UX Designer")
     )
 
+    val samplePendingMembers = listOf(
+        Member(id = "3", name = "John Doe", role = "Applicant")
+    )
+
     val state = TeamDetailsUiState(
         isLoading = false,
         team = sampleTeam,
@@ -369,6 +326,7 @@ fun TeamDetailsScreenContentPreview() {
         filteredCourses = sampleCourses,
         events = sampleEvents,
         members = sampleMembers,
+        pendingMembers = samplePendingMembers,
         selectedTabIndex = 0
     )
 
@@ -438,6 +396,10 @@ fun TeamDetailsScreenContentDarkPreview() {
         Member(id = "2", name = "Sara Jones", role = "UI/UX Designer")
     )
 
+    val samplePendingMembers = listOf(
+        Member(id = "3", name = "John Doe", role = "Applicant")
+    )
+
     val state = TeamDetailsUiState(
         isLoading = false,
         team = sampleTeam,
@@ -445,6 +407,7 @@ fun TeamDetailsScreenContentDarkPreview() {
         filteredCourses = sampleCourses,
         events = sampleEvents,
         members = sampleMembers,
+        pendingMembers = samplePendingMembers,
         selectedTabIndex = 0
     )
 

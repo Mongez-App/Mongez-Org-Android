@@ -72,4 +72,30 @@
     <string name="filter_high">عالي</string>
     <string name="filter_medium">متوسط</string>
     <string name="filter_low">منخفض</string>
+
+    <!-- Events & Members -->
+    <string name="add_event">إضافة فعالية</string>
+    <string name="confirmation">تأكيد</string>
+    <string name="event_added_successfully">تم إضافة الفعالية بنجاح</string>
+    <string name="no_events_yet_team">لا توجد فعاليات بعد</string>
+    <string name="no_events_team_desc">ليس لديك فعاليات مجدولة لهذا الفريق</string>
+    <string name="lets_add_event">فلنضف فعالية</string>
+    <string name="pending_members">الأعضاء المعلقون</string>
+    <string name="no_pending_members_desc">لا يوجد أعضاء معلقون في الوقت الحالي</string>
+    <string name="team_members">أعضاء الفريق</string>
+    <string name="no_team_members_added_yet">لم يتم إضافة أعضاء للفريق بعد</string>
+    <string name="event_course">دورة الفعالية</string>
+    <string name="choose_course">اختر دورة</string>
+    <string name="event_type">نوع الفعالية</string>
+    <string name="choose_event_type">اختر نوع الفعالية</string>
+    <string name="event_date">تاريخ الفعالية</string>
+    <string name="select_course">اختر دورة</string>
+    <string name="select_type">اختر نوع</string>
+    <string name="midterm">ميدتيرم</string>
+    <string name="quiz">كويز</string>
+    <string name="assignment">تكليف</string>
+    <string name="project">مشروع</string>
+    <string name="exam">امتحان</string>
+    <string name="decline">رفض</string>
+    <string name="accept">قبول</string>
 </resources>

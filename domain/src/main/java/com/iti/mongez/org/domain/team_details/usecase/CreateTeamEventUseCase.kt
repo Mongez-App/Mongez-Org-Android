@@ -1,11 +1,10 @@
-package com.iti.mongez.org.domain.teams.usecase
+package com.iti.mongez.org.domain.team_details.usecase
 
-import com.iti.mongez.org.domain.core.Result
-import com.iti.mongez.org.domain.teams.repository.TeamsRepository
+import com.iti.mongez.org.domain.team_details.repository.TeamDetailsRepository
 import javax.inject.Inject
 
 class CreateTeamEventUseCase @Inject constructor(
-    private val repository: TeamsRepository
+    private val repository: TeamDetailsRepository
 ) {
     suspend operator fun invoke(
         teamId: String,

@@ -34,7 +34,7 @@ import com.iti.mongez.org.presentation.auth.register.viewmodel.RegisterViewModel
 import com.iti.mongez.org.presentation.coursedetails.view.CourseDetailsScreen
 import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
-import com.iti.mongez.org.presentation.teams.details.view.TeamDetailsScreen
+import com.iti.mongez.org.presentation.team_details.view.TeamDetailsScreen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -240,13 +240,6 @@ fun AppNavHost(
                         onNavigateToLogin = {
                             backStack.clear()
                             backStack.add(AppRoute.Login)
-                        },
-                        coursesTabContent = {
-                            TeamDetailsScreen(
-                                teamId = "a9bff20a-3bef-448d-a9b6-78b54e7def34", // Default team ID
-                                onNavigateBack = {}, // Not applicable in tab
-                                onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
-                            )
                         }
                     )
                 }

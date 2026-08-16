@@ -2,15 +2,17 @@ package com.iti.mongez.org.data.repository
 
 import com.iti.mongez.org.data.remote.api.CoursesApi
 import com.iti.mongez.org.data.remote.dto.CreateEventRequestDto
+import com.iti.mongez.org.data.remote.dto.MemberActionRequestDto
 import com.iti.mongez.org.data.utils.network.safeApi
 import com.iti.mongez.org.domain.core.Result
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.repository.TeamsRepository
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
+import com.iti.mongez.org.domain.team_details.model.TeamMembers
+import com.iti.mongez.org.domain.team_details.repository.TeamDetailsRepository
 import javax.inject.Inject
 
-class TeamsRepositoryImpl @Inject constructor(
+class TeamDetailsRepositoryImpl @Inject constructor(
     private val api: CoursesApi
-) : TeamsRepository {
+) : TeamDetailsRepository {
 
     override suspend fun getTeamEvents(teamId: String): Result<List<TeamEvent>> {
         return safeApi {
@@ -32,6 +34,26 @@ class TeamsRepositoryImpl @Inject constructor(
                 eventDate = eventDate
             )
             api.createEvent(request).toDomain()
+        }
+    }
+
+    override suspend fun getTeamMembers(teamId: String): Result<TeamMembers> {
+        return safeApi {
+            api.getMembers(teamId).toDomain()
+        }
+    }
+
+    override suspend fun acceptMemberRequest(memberId: String): Result<Unit> {
+        return safeApi {
+            api.acceptMember(MemberActionRequestDto(memberId))
+            Unit
+        }
+    }
+
+    override suspend fun declineMemberRequest(memberId: String): Result<Unit> {
+        return safeApi {
+            api.declineMember(MemberActionRequestDto(memberId))
+            Unit
         }
     }
 }

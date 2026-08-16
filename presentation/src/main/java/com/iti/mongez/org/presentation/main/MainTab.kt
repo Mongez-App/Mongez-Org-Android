@@ -18,11 +18,6 @@ enum class MainTab(
         unselectedIcon = R.drawable.ic_roadmap_unfilled, // Using roadmap as placeholder if teams unfilled missing
         selectedIcon = R.drawable.ic_teams_filled
     ),
-    Courses(
-        label = "Courses",
-        unselectedIcon = R.drawable.ic_courses_unfilled,
-        selectedIcon = R.drawable.ic_courses_filled
-    ),
     Profile(
         label = "Profile",
         unselectedIcon = R.drawable.ic_profile_unfilled,
