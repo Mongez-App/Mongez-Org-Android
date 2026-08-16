@@ -51,6 +51,15 @@ interface CoursesApi {
 
     @POST("createEvent")
     suspend fun createEvent(@Body request: CreateEventRequestDto): EventDto
+
+    @GET("getMembers")
+    suspend fun getMembers(@Query("teamId") teamId: String): GetMembersResponseDto
+
+    @POST("acceptMember")
+    suspend fun acceptMember(@Body request: MemberActionRequestDto): BaseResponseDto<Unit>
+
+    @POST("declineMember")
+    suspend fun declineMember(@Body request: MemberActionRequestDto): BaseResponseDto<Unit>
 }
 
 // Adding BaseResponseDto if it doesn't exist or just using a generic one
