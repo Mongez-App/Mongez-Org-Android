@@ -1,23 +1,28 @@
 package com.iti.mongez.org.presentation.courses.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
-import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.domain.core.Result
+import com.iti.mongez.org.domain.courses.usecase.CreateCourseUseCase
+import com.iti.mongez.org.domain.courses.usecase.DeleteCourseUseCase
+import com.iti.mongez.org.domain.courses.usecase.GetCoursesUseCase
 import com.iti.mongez.org.presentation.courses.contract.CoursesEffect
 import com.iti.mongez.org.presentation.courses.contract.CoursesIntent
 import com.iti.mongez.org.presentation.courses.uiState.CoursesState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CoursesViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val getCoursesUseCase: GetCoursesUseCase,
+    private val createCourseUseCase: CreateCourseUseCase,
+    private val deleteCourseUseCase: DeleteCourseUseCase
 ) : ViewModel() {
+
+    private val teamId = "a9bff20a-3bef-448d-a9b6-78b54e7def34"
 
     private val _state = MutableStateFlow(CoursesState())
     val state: StateFlow<CoursesState> = _state.asStateFlow()
@@ -62,68 +67,54 @@ class CoursesViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             
-            // Mock Data
-            val mockCourses = listOf(
-                Course(
-                    id = "1",
-                    name = "Advanced Kotlin Coroutines",
-                    courseCode = "KOT-101",
-                    imageUrl = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
-                    startDate = "2023-09-01",
-                    examDate = "2023-12-15",
-                    hasMaterials = true,
-                    completionPercentage = 85f
-                ),
-                Course(
-                    id = "2",
-                    name = "Jetpack Compose Internals",
-                    courseCode = "CMP-202",
-                    imageUrl = "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-                    startDate = "2023-10-10",
-                    examDate = "2024-01-20",
-                    hasMaterials = true,
-                    completionPercentage = 45f
-                ),
-                Course(
-                    id = "3",
-                    name = "Android System Architecture",
-                    courseCode = "SYS-303",
-                    imageUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475",
-                    startDate = "2023-11-05",
-                    examDate = "2024-03-10",
-                    hasMaterials = false,
-                    completionPercentage = 10f
-                )
-            )
-
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    allCourses = mockCourses,
-                    filteredCourses = mockCourses,
-                    teamName = "Mobile Native"
-                )
+            when (val result = getCoursesUseCase(teamId)) {
+                is Result.Success -> {
+                    val courses = result.data
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            allCourses = courses,
+                            filteredCourses = courses,
+                            teamName = "Java and Mobile"
+                        )
+                    }
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    _effect.emit(CoursesEffect.ShowSnackbar(result.exception.message ?: "Failed to load courses", AppSnackbarType.Error))
+                }
+                else -> {
+                    _state.update { it.copy(isLoading = false) }
+                }
             }
         }
     }
 
     private fun deleteCourse(courseId: String) {
         viewModelScope.launch {
-            // Dismiss dialog immediately and mark deleting state
             _state.update { it.copy(isDeletingCourse = true, courseToDeleteId = null) }
 
-            // 1. INSTANT OPTIMISTIC UPDATE: Remove course immediately from local lists
-            val updatedAll = _state.value.allCourses.filter { it.id != courseId }
-            val updatedFiltered = _state.value.filteredCourses.filter { it.id != courseId }
-            
-            _state.update {
-                it.copy(
-                    allCourses = updatedAll,
-                    filteredCourses = updatedFiltered,
-                    isDeletingCourse = false
-                )
+            when (val result = deleteCourseUseCase(courseId)) {
+                is Result.Success -> {
+                    _state.update { state ->
+                        val updatedAll = state.allCourses.filter { it.id != courseId }
+                        val updatedFiltered = state.filteredCourses.filter { it.id != courseId }
+                        state.copy(
+                            allCourses = updatedAll,
+                            filteredCourses = updatedFiltered,
+                            isDeletingCourse = false
+                        )
+                    }
+                    _effect.emit(CoursesEffect.ShowSnackbar("Course deleted successfully", AppSnackbarType.Success))
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isDeletingCourse = false) }
+                    _effect.emit(CoursesEffect.ShowSnackbar(result.exception.message ?: "Failed to delete course", AppSnackbarType.Error))
+                }
+                else -> {
+                    _state.update { it.copy(isDeletingCourse = false) }
+                }
             }
-            _effect.emit(CoursesEffect.ShowSnackbar("Course deleted successfully (Mock)", AppSnackbarType.Success))
         }
     }
 
@@ -131,31 +122,29 @@ class CoursesViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isCreatingCourse = true) }
 
-            // Simulate network delay
-            kotlinx.coroutines.delay(1500)
-
-            val newCourse = Course(
-                id = java.util.UUID.randomUUID().toString(),
+            val result = createCourseUseCase(
+                teamId = teamId,
                 name = intent.name,
-                courseCode = intent.courseCode,
-                imageUrl = if (intent.imageUrl.isNotEmpty()) intent.imageUrl else null,
                 startDate = intent.startDate,
-                examDate = intent.examDate,
-                hasMaterials = intent.materials.isNotEmpty(),
-                completionPercentage = 0f
+                endDate = intent.examDate,
+                thumbnailUrl = intent.imageUrl,
+                materialIds = emptyList()
             )
 
-            _state.update { 
-                val updatedList = it.allCourses + newCourse
-                it.copy(
-                    isCreatingCourse = false,
-                    isAddCourseSheetVisible = false,
-                    allCourses = updatedList,
-                    filteredCourses = updatedList
-                )
+            when (result) {
+                is Result.Success -> {
+                    _state.update { it.copy(isCreatingCourse = false, isAddCourseSheetVisible = false) }
+                    _effect.emit(CoursesEffect.ShowSnackbar("Course created successfully", AppSnackbarType.Success))
+                    loadCourses()
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isCreatingCourse = false) }
+                    _effect.emit(CoursesEffect.ShowSnackbar(result.exception.message ?: "Failed to create course", AppSnackbarType.Error))
+                }
+                else -> {
+                    _state.update { it.copy(isCreatingCourse = false) }
+                }
             }
-            
-            _effect.emit(CoursesEffect.ShowSnackbar("Course created successfully (Mock)", AppSnackbarType.Success))
         }
     }
 

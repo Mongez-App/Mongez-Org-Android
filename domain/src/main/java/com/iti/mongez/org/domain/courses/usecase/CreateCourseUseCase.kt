@@ -1,5 +1,7 @@
 package com.iti.mongez.org.domain.courses.usecase
 
+import com.iti.mongez.org.domain.core.Result
+
 import com.iti.mongez.org.domain.courses.model.CourseCreationResult
 import com.iti.mongez.org.domain.courses.repository.CoursesRepository
 import javax.inject.Inject
@@ -8,22 +10,20 @@ class CreateCourseUseCase @Inject constructor(
     private val repository: CoursesRepository
 ) {
     suspend operator fun invoke(
+        teamId: String,
         name: String,
-        courseCode: String,
-        imageUrl: String,
         startDate: String,
-        examDate: String,
-        courseType: String,
-        materialUrl: String?
+        endDate: String,
+        thumbnailUrl: String,
+        materialIds: List<String>
     ): Result<CourseCreationResult> {
         return repository.createCourse(
+            teamId = teamId,
             name = name,
-            courseCode = courseCode,
-            imageUrl = imageUrl,
             startDate = startDate,
-            examDate = examDate,
-            courseType = courseType,
-            materialUrl = materialUrl
+            endDate = endDate,
+            thumbnailUrl = thumbnailUrl,
+            materialIds = materialIds
         )
     }
 }

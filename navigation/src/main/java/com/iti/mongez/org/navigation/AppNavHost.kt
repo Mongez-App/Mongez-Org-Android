@@ -31,6 +31,7 @@ import com.iti.mongez.org.presentation.auth.register.view.SignUp2Screen
 import com.iti.mongez.org.presentation.auth.register.view.SignUp3Screen
 import com.iti.mongez.org.presentation.auth.register.view.SignUp4Screen
 import com.iti.mongez.org.presentation.auth.register.viewmodel.RegisterViewModel
+import com.iti.mongez.org.presentation.coursedetails.view.CourseDetailsScreen
 import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
 import com.iti.mongez.org.presentation.teams.details.view.TeamDetailsScreen
@@ -242,7 +243,7 @@ fun AppNavHost(
                         },
                         coursesTabContent = {
                             TeamDetailsScreen(
-                                teamId = "mobile_native", // Default team ID
+                                teamId = "a9bff20a-3bef-448d-a9b6-78b54e7def34", // Default team ID
                                 onNavigateBack = {}, // Not applicable in tab
                                 onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
                             )
@@ -264,7 +265,15 @@ fun AppNavHost(
                 )
             }
             is AppRoute.CourseDetails -> NavEntry(key) {
-                PlaceholderScreen("Course Details: ${key.courseId}")
+                CourseDetailsScreen(
+                    courseId = key.courseId,
+                    onNavigateBack = {
+                        backStack.remove(key)
+                    },
+                    onNavigateToStudyRoom = { taskId, title ->
+//                        backStack.add(AppRoute.StudyRoom(taskId, title))
+                    },
+                )
             }
             is AppRoute.Events -> NavEntry(AppRoute.Events) {
                 PlaceholderScreen("Events")

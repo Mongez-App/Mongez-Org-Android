@@ -303,7 +303,7 @@ fun AddCourseSheetContent(
                             activeState.selectedDateMillis?.let { millis ->
                                 val localDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
                                 val formattedUi = localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                val formattedIso = Instant.ofEpochMilli(millis).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT)
+                                val formattedIso = localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
                                 if (showStartDatePicker) {
                                     startDateUi = formattedUi

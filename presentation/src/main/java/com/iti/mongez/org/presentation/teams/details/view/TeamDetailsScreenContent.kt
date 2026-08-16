@@ -231,8 +231,8 @@ fun TeamDetailsScreenContent(
 fun EventsList(events: List<TeamEvent>) {
     if (events.isEmpty()) {
         AppEmptyState(
-            title = "No Events Yet",
-            description = "Stay tuned for upcoming team events and meetings.",
+            title = stringResource(R.string.no_events_yet),
+            description = stringResource(R.string.no_events_desc),
             illustration = {
                 Box(
                     modifier = Modifier
@@ -275,8 +275,8 @@ fun EventsList(events: List<TeamEvent>) {
 fun MembersList(members: List<Member>) {
     if (members.isEmpty()) {
         AppEmptyState(
-            title = "No Members Yet",
-            description = "Invite your team members to join this team.",
+            title = stringResource(R.string.no_members_yet),
+            description = stringResource(R.string.no_members_desc),
             illustration = {
                 Box(
                     modifier = Modifier

@@ -41,4 +41,35 @@
     <string name="no_courses_for_team_desc">You haven\'t added any courses yet for this team</string>
     <string name="add_first_course">Add Your First Course</string>
     <string name="search_courses">Search courses...</string>
+
+    <!-- Course Details -->
+    <string name="back">Back</string>
+    <string name="course_options">Course options</string>
+    <string name="edit_course">Edit Course</string>
+    <string name="delete_course">Delete Course</string>
+    <string name="no_materials_empty_state">No materials added yet</string>
+    <string name="today_tasks">Today\'s Tasks</string>
+    <string name="upcoming_tasks">Upcoming Tasks</string>
+    <string name="materials">Materials</string>
+    <string name="tasks">Tasks</string>
+    <string name="filter_all">All</string>
+    <string name="filter_todo">To Do</string>
+    <string name="filter_completed">Completed</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="course_image_url">Course Image URL</string>
+    <string name="course_material_platform">This course\'s material is on the platform</string>
+
+    <!-- Team Details Extras -->
+    <string name="no_events_yet">No Events Yet</string>
+    <string name="no_events_desc">Stay tuned for upcoming team events and meetings.</string>
+    <string name="no_members_yet">No Members Yet</string>
+    <string name="no_members_desc">Invite your team members to join this team.</string>
+
+    <!-- Additional Course Details Strings -->
+    <string name="tab_materials">Materials</string>
+    <string name="tab_tasks">Tasks</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_high">High</string>
+    <string name="filter_medium">Medium</string>
+    <string name="filter_low">Low</string>
 </resources>

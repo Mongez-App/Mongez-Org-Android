@@ -3,6 +3,7 @@ package com.iti.mongez.org.data.di
 import com.google.firebase.auth.FirebaseAuth
 import com.iti.mongez.org.data.BuildConfig
 import com.iti.mongez.org.data.remote.api.AuthApi
+import com.iti.mongez.org.data.remote.api.CoursesApi
 import com.iti.mongez.org.data.utils.network.AuthInterceptor
 import dagger.Module
 import dagger.Provides
@@ -56,5 +57,11 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCoursesApi(retrofit: Retrofit): CoursesApi {
+        return retrofit.create(CoursesApi::class.java)
     }
 }

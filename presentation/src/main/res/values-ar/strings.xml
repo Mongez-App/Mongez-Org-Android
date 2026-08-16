@@ -41,4 +41,35 @@
     <string name="no_courses_for_team_desc">لم تقم بإضافة أي دورات لهذا الفريق بعد</string>
     <string name="add_first_course">أضف دورتك الأولى</string>
     <string name="search_courses">البحث عن الدورات...</string>
+
+    <!-- Course Details -->
+    <string name="back">رجوع</string>
+    <string name="course_options">خيارات الدورة</string>
+    <string name="edit_course">تعديل الدورة</string>
+    <string name="delete_course">حذف الدورة</string>
+    <string name="no_materials_empty_state">لم يتم إضافة مواد بعد</string>
+    <string name="today_tasks">مهام اليوم</string>
+    <string name="upcoming_tasks">المهام القادمة</string>
+    <string name="materials">المواد</string>
+    <string name="tasks">المهام</string>
+    <string name="filter_all">الكل</string>
+    <string name="filter_todo">قيد التنفيذ</string>
+    <string name="filter_completed">مكتمل</string>
+    <string name="save_changes">حفظ التغييرات</string>
+    <string name="course_image_url">رابط صورة الدورة</string>
+    <string name="course_material_platform">مادة هذه الدورة متوفرة على المنصة</string>
+
+    <!-- Team Details Extras -->
+    <string name="no_events_yet">لا توجد فعاليات بعد</string>
+    <string name="no_events_desc">تابعنا لمعرفة الفعاليات والاجتماعات القادمة للفريق.</string>
+    <string name="no_members_yet">لا يوجد أعضاء بعد</string>
+    <string name="no_members_desc">قم بدعوة أعضاء فريقك للانضمام إلى هذا الفريق.</string>
+
+    <!-- Additional Course Details Strings -->
+    <string name="tab_materials">المواد</string>
+    <string name="tab_tasks">المهام</string>
+    <string name="filter_pending">قيد الانتظار</string>
+    <string name="filter_high">عالي</string>
+    <string name="filter_medium">متوسط</string>
+    <string name="filter_low">منخفض</string>
 </resources>

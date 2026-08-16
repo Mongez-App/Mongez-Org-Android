@@ -2,7 +2,10 @@ package com.iti.mongez.org.presentation.teams.details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.mongez.org.domain.core.Result
 import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.domain.courses.usecase.CreateCourseUseCase
+import com.iti.mongez.org.domain.courses.usecase.GetCoursesUseCase
 import com.iti.mongez.org.domain.teams.model.Member
 import com.iti.mongez.org.domain.teams.model.Team
 import com.iti.mongez.org.domain.teams.model.TeamEvent
@@ -22,7 +25,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TeamDetailsViewModel @Inject constructor() : ViewModel() {
+class TeamDetailsViewModel @Inject constructor(
+    private val getCoursesUseCase: GetCoursesUseCase,
+    private val createCourseUseCase: CreateCourseUseCase
+) : ViewModel() {
+
+    private var currentTeamId: String = ""
 
     private val _state = MutableStateFlow(TeamDetailsUiState())
     val state: StateFlow<TeamDetailsUiState> = _state.asStateFlow()
@@ -32,7 +40,10 @@ class TeamDetailsViewModel @Inject constructor() : ViewModel() {
 
     fun handleIntent(intent: TeamDetailsIntent) {
         when (intent) {
-            is TeamDetailsIntent.LoadTeam -> loadTeam(intent.teamId)
+            is TeamDetailsIntent.LoadTeam -> {
+                currentTeamId = intent.teamId
+                loadTeam(intent.teamId)
+            }
             is TeamDetailsIntent.TabSelected -> _state.update { it.copy(selectedTabIndex = intent.index) }
             is TeamDetailsIntent.SearchQueryChanged -> filterCourses(intent.query)
             TeamDetailsIntent.ToggleAddCourseSheet -> {
@@ -56,27 +67,28 @@ class TeamDetailsViewModel @Inject constructor() : ViewModel() {
     private fun createCourse(intent: TeamDetailsIntent.CreateCourse) {
         viewModelScope.launch {
             _state.update { it.copy(isCreatingCourse = true) }
-            kotlinx.coroutines.delay(1000)
-            val newCourse = Course(
-                id = java.util.UUID.randomUUID().toString(),
+            
+            val result = createCourseUseCase(
+                teamId = currentTeamId,
                 name = intent.name,
-                courseCode = intent.courseCode,
-                imageUrl = if (intent.imageUrl.isNotEmpty()) intent.imageUrl else null,
                 startDate = intent.startDate,
-                examDate = intent.examDate,
-                hasMaterials = intent.materials.isNotEmpty(),
-                completionPercentage = 0f
+                endDate = intent.examDate,
+                thumbnailUrl = intent.imageUrl,
+                materialIds = emptyList()
             )
-            _state.update {
-                val updated = it.courses + newCourse
-                it.copy(
-                    isCreatingCourse = false,
-                    isAddCourseSheetVisible = false,
-                    courses = updated,
-                    filteredCourses = updated
-                )
+
+            when (result) {
+                is Result.Success -> {
+                    _state.update { it.copy(isCreatingCourse = false, isAddCourseSheetVisible = false) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar("Course added successfully", AppSnackbarType.Success))
+                    loadTeam(currentTeamId)
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isCreatingCourse = false) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar(result.exception.message ?: "Failed to add course", AppSnackbarType.Error))
+                }
+                else -> {}
             }
-            _effect.emit(TeamDetailsEffect.ShowSnackbar("Course added successfully", AppSnackbarType.Success))
         }
     }
 
@@ -84,38 +96,38 @@ class TeamDetailsViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            // Mock Data
+            // 1. Load Team Info (Still mock until Team use cases are available)
             val mockTeam = Team(
                 id = teamId,
-                name = "Mobile Native",
+                name = "Java and Mobile",
                 description = "Focused on building high-quality Android applications.",
                 imageUrl = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
-                membersCount = 15
+                membersCount = 0
             )
 
-            val mockCourses = listOf(
-                Course(
-                    id = "1",
-                    name = "Kotlin Advanced",
-                    courseCode = "KOT-201",
-                    imageUrl = null,
-                    startDate = "2024-01-01",
-                    examDate = "2024-03-01",
-                    hasMaterials = true,
-                    completionPercentage = 75f
-                ),
-                Course(
-                    id = "2",
-                    name = "Jetpack Compose Basics",
-                    courseCode = "JPC-101",
-                    imageUrl = null,
-                    startDate = "2024-02-15",
-                    examDate = "2024-04-15",
-                    hasMaterials = false,
-                    completionPercentage = 30f
-                )
-            )
+            // 2. Load Real Courses
+            when (val result = getCoursesUseCase(teamId)) {
+                is Result.Success -> {
+                    val courses = result.data
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            team = mockTeam,
+                            courses = courses,
+                            filteredCourses = courses
+                        )
+                    }
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isLoading = false, team = mockTeam) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load courses", AppSnackbarType.Error))
+                }
+                else -> {
+                    _state.update { it.copy(isLoading = false) }
+                }
+            }
 
+            // Mock Data for other sections (Events/Members)
             val mockEvents = listOf(
                 TeamEvent(
                     id = "1",
@@ -123,28 +135,15 @@ class TeamDetailsViewModel @Inject constructor() : ViewModel() {
                     date = "2024-09-20",
                     location = "Room 302",
                     description = "Discussion about the new Android 15 features."
-                ),
-                TeamEvent(
-                    id = "2",
-                    title = "Team Outing",
-                    date = "2024-10-05",
-                    location = "Al Azhar Park",
-                    description = "A day of fun and team building."
                 )
             )
 
             val mockMembers = listOf(
-                Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer"),
-                Member(id = "2", name = "Sara Mohamed", role = "UI/UX Designer"),
-                Member(id = "3", name = "John Doe", role = "Backend Engineer")
+                Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer")
             )
 
             _state.update {
                 it.copy(
-                    isLoading = false,
-                    team = mockTeam,
-                    courses = emptyList(), // Empty for now to show the empty state
-                    filteredCourses = emptyList(),
                     events = mockEvents,
                     members = mockMembers
                 )

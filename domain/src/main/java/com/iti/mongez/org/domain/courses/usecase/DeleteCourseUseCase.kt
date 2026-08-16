@@ -1,5 +1,7 @@
 package com.iti.mongez.org.domain.courses.usecase
 
+import com.iti.mongez.org.domain.core.Result
+
 import com.iti.mongez.org.domain.courses.model.CourseActionResponse
 import com.iti.mongez.org.domain.courses.repository.CoursesRepository
 import javax.inject.Inject

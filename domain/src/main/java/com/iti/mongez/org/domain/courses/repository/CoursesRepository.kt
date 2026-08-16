@@ -1,21 +1,17 @@
 package com.iti.mongez.org.domain.courses.repository
 
-import com.iti.mongez.org.domain.courses.model.Course
-import com.iti.mongez.org.domain.courses.model.CourseCreationResult
-import com.iti.mongez.org.domain.courses.model.CourseActionResponse
-import com.iti.mongez.org.domain.courses.model.CourseMaterial
-import com.iti.mongez.org.domain.courses.model.CourseTask
+import com.iti.mongez.org.domain.core.Result
+import com.iti.mongez.org.domain.courses.model.*
 
 interface CoursesRepository {
-    suspend fun getCourses(): Result<List<Course>>
+    suspend fun getCourses(teamId: String): Result<List<Course>>
     suspend fun createCourse(
+        teamId: String,
         name: String,
-        courseCode: String,
-        imageUrl: String,
         startDate: String,
-        examDate: String,
-        courseType: String,
-        materialUrl: String?
+        endDate: String,
+        thumbnailUrl: String,
+        materialIds: List<String>
     ): Result<CourseCreationResult>
     suspend fun getCourseDetails(courseId: String): Result<Course>
     suspend fun getCourseTasks(courseId: String): Result<List<CourseTask>>
