@@ -1,4 +1,4 @@
-package com.iti.mongez.org.presentation.teams.details.components
+package com.iti.mongez.org.presentation.team_details.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,7 +18,7 @@ import com.iti.mongez.org.designsystem.components.common.AppEmptyState
 import com.iti.mongez.org.designsystem.screens.teams.TeamEventCard
 import com.iti.mongez.org.designsystem.screens.teams.TeamEventColor
 import com.iti.mongez.org.designsystem.theme.Theme
-import com.iti.mongez.org.domain.teams.model.TeamEvent
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
 import com.iti.mongez.org.presentation.R
 
 @Composable

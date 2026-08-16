@@ -1,10 +1,10 @@
-package com.iti.mongez.org.domain.teams.repository
+package com.iti.mongez.org.domain.team_details.repository
 
 import com.iti.mongez.org.domain.core.Result
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.model.TeamMembers
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
+import com.iti.mongez.org.domain.team_details.model.TeamMembers
 
-interface TeamsRepository {
+interface TeamDetailsRepository {
     suspend fun getTeamEvents(teamId: String): Result<List<TeamEvent>>
     suspend fun createTeamEvent(
         teamId: String,

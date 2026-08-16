@@ -1,7 +1,7 @@
 package com.iti.mongez.org.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
-import com.iti.mongez.org.domain.teams.model.TeamEvent
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
 
 data class EventDto(
     @SerializedName("id") val id: String,
@@ -40,7 +40,7 @@ data class MemberDto(
     @SerializedName("role") val role: String?,
     @SerializedName("photoUrl") val imageUrl: String?
 ) {
-    fun toDomain() = com.iti.mongez.org.domain.teams.model.Member(
+    fun toDomain() = com.iti.mongez.org.domain.team_details.model.Member(
         id = id,
         name = name,
         role = role ?: "Member",
@@ -55,7 +55,7 @@ data class GetMembersResponseDto(
     @SerializedName("pendingTotal") val pendingTotal: Int,
     @SerializedName("teamTotal") val teamTotal: Int
 ) {
-    fun toDomain() = com.iti.mongez.org.domain.teams.model.TeamMembers(
+    fun toDomain() = com.iti.mongez.org.domain.team_details.model.TeamMembers(
         teamId = teamId,
         pendingMembers = pendingMembers.map { it.toDomain() },
         teamMembers = teamMembers.map { it.toDomain() },

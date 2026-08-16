@@ -34,7 +34,7 @@ import com.iti.mongez.org.presentation.auth.register.viewmodel.RegisterViewModel
 import com.iti.mongez.org.presentation.coursedetails.view.CourseDetailsScreen
 import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
-import com.iti.mongez.org.presentation.teams.details.view.TeamDetailsScreen
+import com.iti.mongez.org.presentation.team_details.view.TeamDetailsScreen
 import kotlinx.coroutines.delay
 
 @Composable

@@ -5,14 +5,14 @@ import com.iti.mongez.org.data.remote.dto.CreateEventRequestDto
 import com.iti.mongez.org.data.remote.dto.MemberActionRequestDto
 import com.iti.mongez.org.data.utils.network.safeApi
 import com.iti.mongez.org.domain.core.Result
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.model.TeamMembers
-import com.iti.mongez.org.domain.teams.repository.TeamsRepository
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
+import com.iti.mongez.org.domain.team_details.model.TeamMembers
+import com.iti.mongez.org.domain.team_details.repository.TeamDetailsRepository
 import javax.inject.Inject
 
-class TeamsRepositoryImpl @Inject constructor(
+class TeamDetailsRepositoryImpl @Inject constructor(
     private val api: CoursesApi
-) : TeamsRepository {
+) : TeamDetailsRepository {
 
     override suspend fun getTeamEvents(teamId: String): Result<List<TeamEvent>> {
         return safeApi {

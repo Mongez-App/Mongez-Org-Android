@@ -1,4 +1,4 @@
-package com.iti.mongez.org.presentation.teams.details.contract
+package com.iti.mongez.org.presentation.team_details.contract
 
 sealed interface TeamDetailsIntent {
     data class LoadTeam(val teamId: String) : TeamDetailsIntent

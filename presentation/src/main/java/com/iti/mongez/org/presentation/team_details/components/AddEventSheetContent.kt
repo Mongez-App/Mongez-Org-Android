@@ -1,4 +1,4 @@
-package com.iti.mongez.org.presentation.teams.details.components
+package com.iti.mongez.org.presentation.team_details.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

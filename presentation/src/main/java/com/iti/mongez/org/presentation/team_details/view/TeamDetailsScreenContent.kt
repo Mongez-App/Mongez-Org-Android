@@ -1,20 +1,13 @@
-package com.iti.mongez.org.presentation.teams.details.view
+package com.iti.mongez.org.presentation.team_details.view
 
 import android.graphics.Paint
-import android.util.Patterns
-import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.rounded.AutoStories
-import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,32 +20,27 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.iti.mongez.org.designsystem.components.button.AppButton
 import com.iti.mongez.org.designsystem.components.common.AppEmptyState
-import com.iti.mongez.org.designsystem.components.loading.AppShimmer
 import com.iti.mongez.org.designsystem.components.dialog.AppConfirmationDialog
 import com.iti.mongez.org.designsystem.components.search.AppSearchBar
 import com.iti.mongez.org.designsystem.components.sheet.AppBottomSheet
-import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarContent
-import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 import com.iti.mongez.org.designsystem.components.tabs.AppPrimaryTabs
 import com.iti.mongez.org.designsystem.theme.MongezTheme
 import com.iti.mongez.org.designsystem.theme.Theme
+import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.domain.team_details.model.Member
+import com.iti.mongez.org.domain.team_details.model.Team
+import com.iti.mongez.org.domain.team_details.model.TeamEvent
 import com.iti.mongez.org.presentation.R
 import com.iti.mongez.org.presentation.courses.components.AddCourseSheetContent
 import com.iti.mongez.org.presentation.courses.components.CoursesList
-import com.iti.mongez.org.presentation.teams.details.components.AddEventSheetContent
-import com.iti.mongez.org.presentation.teams.details.components.TeamEventsList
-import com.iti.mongez.org.presentation.teams.details.components.TeamMembersTabContent
-import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
-import com.iti.mongez.org.presentation.teams.details.uiState.TeamDetailsUiState
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.model.Member
-import com.iti.mongez.org.domain.teams.model.Team
-import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.presentation.team_details.components.AddEventSheetContent
+import com.iti.mongez.org.presentation.team_details.components.TeamEventsList
+import com.iti.mongez.org.presentation.team_details.components.TeamMembersTabContent
+import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsIntent
+import com.iti.mongez.org.presentation.team_details.uiState.TeamDetailsUiState
 
 private fun Modifier.coursesActionShadow(
     shadowColor: Color,
@@ -274,6 +262,7 @@ fun TeamDetailsScreenContent(
     }
 }
 
+@Preview(showBackground = true, name = "Team Details")
 @Composable
 fun TeamDetailsScreenContentPreview() {
     val sampleTeam = Team(

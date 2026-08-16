@@ -1,4 +1,4 @@
-package com.iti.mongez.org.domain.teams.model
+package com.iti.mongez.org.domain.team_details.model
 
 data class TeamEvent(
     val id: String,
