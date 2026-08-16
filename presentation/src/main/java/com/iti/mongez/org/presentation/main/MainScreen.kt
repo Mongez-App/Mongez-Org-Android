@@ -34,7 +34,10 @@ import com.iti.mongez.org.presentation.profile.ProfileViewModel
 fun MainScreen(
     onNavigateToCourseDetails: (String) -> Unit,
     onNavigateToTeamDetails: (String) -> Unit,
-    onNavigateToLogin: () -> Unit = {}
+    onNavigateToLogin: () -> Unit = {},
+    coursesTabContent: @Composable () -> Unit = {
+        Text(text = "Courses Screen Placeholder")
+    }
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val selectedTab = MainTab.fromIndex(selectedTabIndex)
@@ -59,7 +62,10 @@ fun MainScreen(
         MainScreenContent(
             tab = selectedTab,
             innerPadding = innerPadding,
-            onNavigateToLogin = onNavigateToLogin
+            onNavigateToCourseDetails = onNavigateToCourseDetails,
+            onNavigateToTeamDetails = onNavigateToTeamDetails,
+            onNavigateToLogin = onNavigateToLogin,
+            coursesTabContent = coursesTabContent
         )
     }
 }
@@ -68,7 +74,10 @@ fun MainScreen(
 private fun MainScreenContent(
     tab: MainTab,
     innerPadding: PaddingValues,
-    onNavigateToLogin: () -> Unit
+    onNavigateToCourseDetails: (String) -> Unit,
+    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    coursesTabContent: @Composable () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -102,7 +111,7 @@ private fun MainScreenContent(
                 Text(text = "Teams Screen Placeholder")
             }
             MainTab.Courses -> {
-                Text(text = "Courses Screen Placeholder")
+                coursesTabContent()
             }
             MainTab.Profile -> {
                 val profileViewModel: ProfileViewModel = hiltViewModel()

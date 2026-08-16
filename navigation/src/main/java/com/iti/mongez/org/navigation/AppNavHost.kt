@@ -1,6 +1,7 @@
 package com.iti.mongez.org.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
@@ -29,7 +31,9 @@ import com.iti.mongez.org.presentation.auth.register.view.SignUp2Screen
 import com.iti.mongez.org.presentation.auth.register.view.SignUp3Screen
 import com.iti.mongez.org.presentation.auth.register.view.SignUp4Screen
 import com.iti.mongez.org.presentation.auth.register.viewmodel.RegisterViewModel
+import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
+import com.iti.mongez.org.presentation.teams.details.view.TeamDetailsScreen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -235,11 +239,29 @@ fun AppNavHost(
                         onNavigateToLogin = {
                             backStack.clear()
                             backStack.add(AppRoute.Login)
+                        },
+                        coursesTabContent = {
+                            TeamDetailsScreen(
+                                teamId = "mobile_native", // Default team ID
+                                onNavigateBack = {}, // Not applicable in tab
+                                onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
+                            )
                         }
                     )
                 }
+            is AppRoute.Courses -> NavEntry(AppRoute.Courses) {
+                CoursesScreen(
+                    innerPadding = PaddingValues(0.dp), // NavDisplay handles layout, but CoursesScreen expects PaddingValues
+                    onCourseClick = { courseId -> backStack.add(AppRoute.CourseDetails(courseId)) },
+                    onNavigateBack = { backStack.removeLastOrNull() }
+                )
+            }
             is AppRoute.TeamDetails -> NavEntry(key) {
-                PlaceholderScreen("Team Details: ${key.teamId}")
+                TeamDetailsScreen(
+                    teamId = key.teamId,
+                    onNavigateBack = { backStack.removeLastOrNull() },
+                    onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
+                )
             }
             is AppRoute.CourseDetails -> NavEntry(key) {
                 PlaceholderScreen("Course Details: ${key.courseId}")

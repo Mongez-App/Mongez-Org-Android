@@ -15,6 +15,7 @@ sealed interface AppRoute {
     data object UnderReview : AppRoute
     data object Verified : AppRoute
     data object Main : AppRoute
+    data object Courses : AppRoute
     data class TeamDetails(val teamId: String) : AppRoute
     data class CourseDetails(val courseId: String) : AppRoute
     data object Events : AppRoute
