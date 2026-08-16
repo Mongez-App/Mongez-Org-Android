@@ -4,7 +4,7 @@ import android.net.Uri
 import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 
 sealed interface CoursesIntent {
-    object LoadCourses : CoursesIntent
+    data class LoadCourses(val teamId: String, val teamName: String) : CoursesIntent
     data class SearchQueryChanged(val query: String) : CoursesIntent
     object FilterClicked : CoursesIntent
     object ToggleAddCourseSheet : CoursesIntent

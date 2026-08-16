@@ -2,6 +2,7 @@ package com.iti.mongez.org.presentation.team_details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 import com.iti.mongez.org.domain.core.Result
 import com.iti.mongez.org.domain.courses.usecase.CreateCourseUseCase
 import com.iti.mongez.org.domain.courses.usecase.GetCoursesUseCase
@@ -11,7 +12,6 @@ import com.iti.mongez.org.domain.team_details.usecase.CreateTeamEventUseCase
 import com.iti.mongez.org.domain.team_details.usecase.DeclineMemberRequestUseCase
 import com.iti.mongez.org.domain.team_details.usecase.GetTeamEventsUseCase
 import com.iti.mongez.org.domain.team_details.usecase.GetTeamMembersUseCase
-import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsEffect
 import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsIntent
 import com.iti.mongez.org.presentation.team_details.uiState.TeamDetailsUiState
@@ -38,6 +38,7 @@ class TeamDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var currentTeamId: String = ""
+    private var currentTeamName: String = "Unknown Team"
 
     private val _state = MutableStateFlow(TeamDetailsUiState())
     val state: StateFlow<TeamDetailsUiState> = _state.asStateFlow()
@@ -49,7 +50,8 @@ class TeamDetailsViewModel @Inject constructor(
         when (intent) {
             is TeamDetailsIntent.LoadTeam -> {
                 currentTeamId = intent.teamId
-                loadTeam(intent.teamId)
+                currentTeamName = intent.teamName
+                loadTeam(intent.teamId, intent.teamName)
             }
             is TeamDetailsIntent.TabSelected -> _state.update { it.copy(selectedTabIndex = intent.index) }
             is TeamDetailsIntent.SearchQueryChanged -> filterCourses(intent.query)
@@ -75,7 +77,7 @@ class TeamDetailsViewModel @Inject constructor(
             when (val result = acceptMemberRequestUseCase(memberId)) {
                 is Result.Success -> {
                     _effect.emit(TeamDetailsEffect.ShowSnackbar("Member accepted successfully", AppSnackbarType.Success))
-                    loadTeam(currentTeamId)
+                    loadTeam(currentTeamId, currentTeamName)
                 }
                 is Result.Failure -> {
                     _state.update { it.copy(isLoading = false) }
@@ -92,7 +94,7 @@ class TeamDetailsViewModel @Inject constructor(
             when (val result = declineMemberRequestUseCase(memberId)) {
                 is Result.Success -> {
                     _effect.emit(TeamDetailsEffect.ShowSnackbar("Request declined", AppSnackbarType.Success))
-                    loadTeam(currentTeamId)
+                    loadTeam(currentTeamId, currentTeamName)
                 }
                 is Result.Failure -> {
                     _state.update { it.copy(isLoading = false) }
@@ -123,7 +125,7 @@ class TeamDetailsViewModel @Inject constructor(
                             isEventAddedSuccessfully = true
                         )
                     }
-                    loadTeam(currentTeamId)
+                    loadTeam(currentTeamId, currentTeamName)
                 }
                 is Result.Failure -> {
                     _state.update { it.copy(isCreatingEvent = false) }
@@ -162,7 +164,7 @@ class TeamDetailsViewModel @Inject constructor(
                 is Result.Success -> {
                     _state.update { it.copy(isCreatingCourse = false, isAddCourseSheetVisible = false) }
                     _effect.emit(TeamDetailsEffect.ShowSnackbar("Course added successfully", AppSnackbarType.Success))
-                    loadTeam(currentTeamId)
+                    loadTeam(currentTeamId, currentTeamName)
                 }
                 is Result.Failure -> {
                     _state.update { it.copy(isCreatingCourse = false) }
@@ -173,14 +175,14 @@ class TeamDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun loadTeam(teamId: String) {
+    private fun loadTeam(teamId: String, teamName: String) {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
             // 1. Load Team Info (Mock until Team API is ready)
             val mockTeam = Team(
                 id = teamId,
-                name = "Java and Mobile",
+                name = teamName,
                 description = "Focused on building high-quality Android applications.",
                 imageUrl = "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
                 membersCount = 0

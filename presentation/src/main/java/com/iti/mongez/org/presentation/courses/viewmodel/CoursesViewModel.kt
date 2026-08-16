@@ -11,7 +11,13 @@ import com.iti.mongez.org.presentation.courses.contract.CoursesEffect
 import com.iti.mongez.org.presentation.courses.contract.CoursesIntent
 import com.iti.mongez.org.presentation.courses.uiState.CoursesState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +27,8 @@ class CoursesViewModel @Inject constructor(
     private val createCourseUseCase: CreateCourseUseCase,
     private val deleteCourseUseCase: DeleteCourseUseCase
 ) : ViewModel() {
-
-    private val teamId = "a9bff20a-3bef-448d-a9b6-78b54e7def34"
+    private var currentTeamId = ""
+    private var currentTeamName = "Unknown Team"
 
     private val _state = MutableStateFlow(CoursesState())
     val state: StateFlow<CoursesState> = _state.asStateFlow()
@@ -30,13 +36,15 @@ class CoursesViewModel @Inject constructor(
     private val _effect = MutableSharedFlow<CoursesEffect>()
     val effect: SharedFlow<CoursesEffect> = _effect.asSharedFlow()
 
-    init {
-        handleIntent(CoursesIntent.LoadCourses)
-    }
+
 
     fun handleIntent(intent: CoursesIntent) {
         when(intent) {
-            is CoursesIntent.LoadCourses -> loadCourses()
+            is CoursesIntent.LoadCourses -> {
+                currentTeamId = intent.teamId
+                currentTeamName = intent.teamName
+                loadCourses()
+            }
             is CoursesIntent.SearchQueryChanged -> filterCourses(intent.query)
             is CoursesIntent.CreateCourse -> createCourse(intent)
             is CoursesIntent.ToggleAddCourseSheet -> {
@@ -67,7 +75,7 @@ class CoursesViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             
-            when (val result = getCoursesUseCase(teamId)) {
+            when (val result = getCoursesUseCase(currentTeamId)) {
                 is Result.Success -> {
                     val courses = result.data
                     _state.update {
@@ -75,7 +83,7 @@ class CoursesViewModel @Inject constructor(
                             isLoading = false,
                             allCourses = courses,
                             filteredCourses = courses,
-                            teamName = "Java and Mobile"
+                            teamName = currentTeamName
                         )
                     }
                 }
@@ -123,7 +131,7 @@ class CoursesViewModel @Inject constructor(
             _state.update { it.copy(isCreatingCourse = true) }
 
             val result = createCourseUseCase(
-                teamId = teamId,
+                teamId = currentTeamId,
                 name = intent.name,
                 startDate = intent.startDate,
                 endDate = intent.examDate,

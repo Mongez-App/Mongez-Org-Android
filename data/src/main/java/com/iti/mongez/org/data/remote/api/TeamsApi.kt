@@ -10,12 +10,12 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface TeamsApi {
-    @GET("organization/getTeams")
+    @GET("getTeams")
     suspend fun getTeams(): GetTeamsResponse
 
-    @POST("organization/createTeam")
+    @POST("createTeam")
     suspend fun createTeam(@Body request: CreateTeamRequest): TeamDto
 
-    @POST("organization/uploadTeamPhoto")
+    @POST("uploadTeamPhoto")
     suspend fun uploadTeamPhoto(@Body request: UploadPhotoRequest): UploadPhotoResponse
 }

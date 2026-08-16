@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,12 +24,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.mongez.org.designsystem.R
 import com.iti.mongez.org.designsystem.components.button.AppButton
-import com.iti.mongez.org.designsystem.components.button.SocialButton
 import com.iti.mongez.org.designsystem.components.textfield.AppPasswordTextField
 import com.iti.mongez.org.designsystem.components.textfield.AppTextField
 import com.iti.mongez.org.designsystem.theme.MongezTheme
@@ -125,30 +122,9 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(Theme.spacing.lg))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            HorizontalDivider(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(R.string.login_or),
-                modifier = Modifier.padding(horizontal = Theme.spacing.md),
-                color = Theme.colorScheme.text.secondary
-            )
-            HorizontalDivider(modifier = Modifier.weight(1f))
-        }
-
-        Spacer(modifier = Modifier.height(Theme.spacing.lg))
-
-        SocialButton(
-            text = stringResource(R.string.login_google_sign_in),
-            icon = ImageVector.vectorResource(id = R.drawable.ic_google),
-            onClick = { onIntent(LoginIntent.OnGoogleSignInClicked) },
-            modifier = Modifier.fillMaxWidth()
-        )
-
         Spacer(modifier = Modifier.height(Theme.spacing.xl))
+
+
 
         Row(
             horizontalArrangement = Arrangement.Center,

@@ -19,11 +19,16 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
 
-        // 1. Fetch token from Firebase (fresh) or fallback to local DataStore
+        // 1. Fetch fresh token directly from Firebase Auth
         val token = runBlocking {
             try {
-                firebaseAuth.currentUser?.getIdToken(false)?.await()?.token 
-                    ?: authProgressDataStore.getToken()
+                val freshToken = firebaseAuth.currentUser?.getIdToken(false)?.await()?.token
+                if (freshToken != null) {
+                    authProgressDataStore.saveToken(freshToken)
+                    freshToken
+                } else {
+                    authProgressDataStore.getToken()
+                }
             } catch (e: Exception) {
                 authProgressDataStore.getToken()
             }
