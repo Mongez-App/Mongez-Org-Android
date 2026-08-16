@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         is SplashRoute.ToSignUpStep -> {
                             val stack = mutableListOf<AppRoute>(AppRoute.Login)
                             for (i in 1..routeState.step) {
-                                when (i) {
+                                when (i) {  
                                     1 -> stack.add(AppRoute.SignUp1)
                                     2 -> stack.add(AppRoute.SignUp2)
                                     3 -> stack.add(AppRoute.SignUp3)

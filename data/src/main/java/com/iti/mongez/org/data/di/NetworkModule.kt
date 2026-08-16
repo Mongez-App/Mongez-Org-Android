@@ -64,4 +64,10 @@ object NetworkModule {
     fun provideCoursesApi(retrofit: Retrofit): CoursesApi {
         return retrofit.create(CoursesApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideTeamsApi(retrofit: Retrofit): com.iti.mongez.org.data.remote.api.TeamsApi {
+        return retrofit.create(com.iti.mongez.org.data.remote.api.TeamsApi::class.java)
+    }
 }

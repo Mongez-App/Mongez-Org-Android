@@ -108,10 +108,11 @@ private fun MainScreenContent(
                 }
             }
             MainTab.Teams -> {
-                Text(text = "Teams Screen Placeholder")
-            }
-            MainTab.Courses -> {
-                coursesTabContent()
+                val teamsViewModel: com.iti.mongez.org.presentation.teams.TeamsViewModel = hiltViewModel()
+                com.iti.mongez.org.presentation.teams.TeamsScreen(
+                    viewModel = teamsViewModel,
+                    onNavigateToCourseDetails = onNavigateToCourseDetails
+                )
             }
             MainTab.Profile -> {
                 val profileViewModel: ProfileViewModel = hiltViewModel()

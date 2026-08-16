@@ -33,4 +33,10 @@ abstract class RepositoryModule {
     abstract fun bindTeamsRepository(
         teamsRepositoryImpl: TeamsRepositoryImpl
     ): TeamsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTeamManagementFlowRepository(
+        teamManagementFlowRepositoryImpl: com.iti.mongez.org.data.repository.TeamManagementFlowRepositoryImpl
+    ): com.iti.mongez.org.domain.team.repository.TeamManagementFlowRepository
 }
