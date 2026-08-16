@@ -7,15 +7,15 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AuthApi {
-    @POST("organization/auth/register")
+    @POST("auth/register")
     suspend fun register(@Body request: RegisterRequestDto): AuthResponseDto
 
-    @POST("organization/auth/login")
+    @POST("auth/login")
     suspend fun login(): AuthResponseDto
 
-    @POST("organization/auth/logout")
+    @POST("auth/logout")
     suspend fun logout()
 
-    @POST("organization/review_organization")
+    @POST("review_organization")
     suspend fun reviewOrganization(@Body request: ReviewOrganizationRequestDto)
 }
