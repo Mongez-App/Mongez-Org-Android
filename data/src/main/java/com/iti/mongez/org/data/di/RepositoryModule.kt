@@ -4,9 +4,11 @@ import com.iti.mongez.org.data.repository.AuthRepositoryImpl
 import com.iti.mongez.org.data.repository.CoursesRepositoryImpl
 import com.iti.mongez.org.data.repository.ProfileRepositoryImpl
 import com.iti.mongez.org.data.repository.TeamDetailsRepositoryImpl
+import com.iti.mongez.org.data.repository.TeamsRepositoryImpl
 import com.iti.mongez.org.domain.auth.repository.AuthRepository
 import com.iti.mongez.org.domain.courses.repository.CoursesRepository
 import com.iti.mongez.org.domain.profile.repository.ProfileRepository
+import com.iti.mongez.org.domain.team.repository.TeamsRepository
 import com.iti.mongez.org.domain.team_details.repository.TeamDetailsRepository
 import dagger.Binds
 import dagger.Module
@@ -32,8 +34,8 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTeamsRepository(
-        teamsRepositoryImpl: TeamDetailsRepositoryImpl
+    abstract fun bindTeamDetailsRepository(
+        teamsDetailsRepositoryImpl: TeamDetailsRepositoryImpl
     ): TeamDetailsRepository
 
     @Binds
@@ -41,4 +43,9 @@ abstract class RepositoryModule {
     abstract fun bindProfileRepository(
         profileRepositoryImpl: ProfileRepositoryImpl
     ): ProfileRepository
+  
+    abstract fun bindTeamsRepository(
+        teamsRepositoryImpl: TeamsRepositoryImpl
+    ): TeamsRepository
+ 
 }

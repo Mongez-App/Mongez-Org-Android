@@ -1,7 +1,7 @@
 package com.iti.mongez.org.presentation.team_details.contract
 
 sealed interface TeamDetailsIntent {
-    data class LoadTeam(val teamId: String) : TeamDetailsIntent
+    data class LoadTeam(val teamId: String, val teamName: String) : TeamDetailsIntent
     data class TabSelected(val index: Int) : TeamDetailsIntent
     data class SearchQueryChanged(val query: String) : TeamDetailsIntent
     object ToggleAddCourseSheet : TeamDetailsIntent

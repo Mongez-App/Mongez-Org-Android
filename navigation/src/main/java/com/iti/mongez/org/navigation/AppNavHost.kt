@@ -36,6 +36,7 @@ import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
 import com.iti.mongez.org.presentation.team_details.view.TeamDetailsScreen
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun AppNavHost(
@@ -53,7 +54,7 @@ fun AppNavHost(
     
     LaunchedEffect(snackbarVisible) {
         if (snackbarVisible) {
-            delay(3000)
+            delay(3000.milliseconds)
             snackbarVisible = false
         }
     }
@@ -138,6 +139,9 @@ fun AppNavHost(
                             }
                             is LoginEffect.NavigateToSignUp -> {
                                 backStack.add(AppRoute.SignUp1)
+                            }
+                            is LoginEffect.NavigateToSignUpStep2 -> {
+                                backStack.add(AppRoute.SignUp2)
                             }
                             is LoginEffect.LaunchGoogleSignIn -> {
                                 // Handled in LoginScreen or here
@@ -236,7 +240,7 @@ fun AppNavHost(
                 is AppRoute.Main -> NavEntry(AppRoute.Main) {
                     MainScreen(
                         onNavigateToCourseDetails = { courseId -> backStack.add(AppRoute.CourseDetails(courseId)) },
-                        onNavigateToTeamDetails = { teamId -> backStack.add(AppRoute.TeamDetails(teamId)) },
+                        onNavigateToTeamDetails = { teamId, teamName -> backStack.add(AppRoute.TeamDetails(teamId, teamName)) },
                         onNavigateToLogin = {
                             backStack.clear()
                             backStack.add(AppRoute.Login)
@@ -253,6 +257,7 @@ fun AppNavHost(
             is AppRoute.TeamDetails -> NavEntry(key) {
                 TeamDetailsScreen(
                     teamId = key.teamId,
+                    teamName = key.teamName,
                     onNavigateBack = { backStack.removeLastOrNull() },
                     onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
                 )

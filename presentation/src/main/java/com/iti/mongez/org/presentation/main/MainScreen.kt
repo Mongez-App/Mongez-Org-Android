@@ -29,11 +29,13 @@ import com.iti.mongez.org.designsystem.theme.Theme
 import com.iti.mongez.org.presentation.R
 import com.iti.mongez.org.presentation.profile.ProfileScreen
 import com.iti.mongez.org.presentation.profile.ProfileViewModel
+import com.iti.mongez.org.presentation.teams.TeamsScreen
+import com.iti.mongez.org.presentation.teams.TeamsViewModel
 
 @Composable
 fun MainScreen(
-    onNavigateToCourseDetails: (String) -> Unit,
-    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToCourseDetails: (String) -> Unit = {},
+    onNavigateToTeamDetails: (String, String) -> Unit = { _, _ -> },
     onNavigateToLogin: () -> Unit = {}
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -71,7 +73,7 @@ private fun MainScreenContent(
     tab: MainTab,
     innerPadding: PaddingValues,
     onNavigateToCourseDetails: (String) -> Unit,
-    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToTeamDetails: (String, String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
     Box(
@@ -103,7 +105,12 @@ private fun MainScreenContent(
                 }
             }
             MainTab.Teams -> {
-                Text(text = "Teams Screen Placeholder")
+                val teamsViewModel: TeamsViewModel = hiltViewModel()
+                TeamsScreen(
+                    viewModel = teamsViewModel,
+                    onNavigateToCourseDetails = onNavigateToCourseDetails,
+                    onNavigateToTeamDetails = onNavigateToTeamDetails
+                )
             }
             MainTab.Profile -> {
                 val profileViewModel: ProfileViewModel = hiltViewModel()

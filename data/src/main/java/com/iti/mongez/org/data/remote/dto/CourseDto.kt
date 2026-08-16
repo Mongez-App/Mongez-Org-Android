@@ -11,12 +11,12 @@ data class CourseDto(
     @SerializedName("name") val name: String,
     @SerializedName("course_code", alternate = ["courseCode"]) val courseCode: String?,
     @SerializedName("thumbnail_url", alternate = ["thumbnailUrl", "image_url", "imageUrl"]) val thumbnailUrl: String?,
-    @SerializedName("start_date", alternate = ["startDate"]) val startDate: String,
-    @SerializedName("end_date", alternate = ["endDate", "exam_date", "examDate"]) val endDate: String,
-    @SerializedName("has_materials", alternate = ["hasMaterials"]) val hasMaterials: Boolean = false,
-    @SerializedName("completion_percentage", alternate = ["completionPercentage"]) val completionPercentage: Float = 0f,
-    @SerializedName("is_hidden", alternate = ["isHidden"]) val isHidden: Boolean = false,
-    @SerializedName("course_type", alternate = ["courseType"]) val courseType: String = "",
+    @SerializedName("start_date", alternate = ["startDate"]) val startDate: String?,
+    @SerializedName("end_date", alternate = ["endDate", "exam_date", "examDate"]) val endDate: String?,
+    @SerializedName("has_materials", alternate = ["hasMaterials"]) val hasMaterials: Boolean?,
+    @SerializedName("completion_percentage", alternate = ["completionPercentage"]) val completionPercentage: Float?,
+    @SerializedName("is_hidden", alternate = ["isHidden"]) val isHidden: Boolean?,
+    @SerializedName("course_type", alternate = ["courseType"]) val courseType: String?,
     @SerializedName("material_url", alternate = ["materialUrl"]) val materialUrl: String? = null
 ) {
     fun toDomain() = Course(
@@ -24,12 +24,12 @@ data class CourseDto(
         name = name,
         courseCode = courseCode ?: "",
         imageUrl = thumbnailUrl,
-        startDate = startDate,
-        examDate = endDate,
-        hasMaterials = hasMaterials,
-        completionPercentage = completionPercentage,
-        isHidden = isHidden,
-        courseType = courseType,
+        startDate = startDate ?: "",
+        examDate = endDate ?: "",
+        hasMaterials = hasMaterials ?: false,
+        completionPercentage = completionPercentage ?: 0f,
+        isHidden = isHidden ?: false,
+        courseType = courseType ?: "",
         materialUrl = materialUrl
     )
 }

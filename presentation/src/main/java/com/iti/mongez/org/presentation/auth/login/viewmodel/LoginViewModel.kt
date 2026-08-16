@@ -109,7 +109,7 @@ class LoginViewModel @Inject constructor(
             
             result.fold(
                 onSuccess = {
-                    _effect.emit(LoginEffect.NavigateToHome)
+                    _effect.emit(LoginEffect.NavigateToSignUpStep2)
                 },
                 onFailure = { error ->
                     val message = (error as? AppException)?.toFriendlyMessage() ?: error.message ?: "Unknown Error"
