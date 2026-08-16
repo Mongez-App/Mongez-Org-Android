@@ -15,6 +15,15 @@ sealed interface TeamDetailsIntent {
         val courseType: String,
         val materialUrl: String?
     ) : TeamDetailsIntent
+
+    object ToggleAddEventSheet : TeamDetailsIntent
+    data class CreateEvent(
+        val courseId: String,
+        val type: String,
+        val date: String
+    ) : TeamDetailsIntent
+
+    object DismissEventSuccessDialog : TeamDetailsIntent
 }
 
 sealed interface TeamDetailsEffect {

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.iti.mongez.org.designsystem.components.button.AppButton
 import com.iti.mongez.org.designsystem.components.common.AppEmptyState
 import com.iti.mongez.org.designsystem.components.loading.AppShimmer
+import com.iti.mongez.org.designsystem.components.dialog.AppConfirmationDialog
 import com.iti.mongez.org.designsystem.components.search.AppSearchBar
 import com.iti.mongez.org.designsystem.components.sheet.AppBottomSheet
 import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarContent
@@ -43,6 +44,8 @@ import com.iti.mongez.org.designsystem.theme.Theme
 import com.iti.mongez.org.presentation.R
 import com.iti.mongez.org.presentation.courses.components.AddCourseSheetContent
 import com.iti.mongez.org.presentation.courses.components.CoursesList
+import com.iti.mongez.org.presentation.teams.details.components.AddEventSheetContent
+import com.iti.mongez.org.presentation.teams.details.components.TeamEventsList
 import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
 import com.iti.mongez.org.presentation.teams.details.uiState.TeamDetailsUiState
 import com.iti.mongez.org.domain.teams.model.TeamEvent
@@ -112,7 +115,13 @@ fun TeamDetailsScreenContent(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onIntent(TeamDetailsIntent.ToggleAddCourseSheet) },
+                        onClick = {
+                            if (state.selectedTabIndex == 0) {
+                                onIntent(TeamDetailsIntent.ToggleAddCourseSheet)
+                            } else if (state.selectedTabIndex == 1) {
+                                onIntent(TeamDetailsIntent.ToggleAddEventSheet)
+                            }
+                        },
                         modifier = Modifier
                             .padding(end = Theme.spacing.lg)
                             .size(Theme.spacing.xxxl)
@@ -192,7 +201,10 @@ fun TeamDetailsScreenContent(
                                     }
                                 }
                             }
-                            1 -> EventsList(events = state.events)
+                            1 -> TeamEventsList(
+                                events = state.events,
+                                onAddEventClick = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) }
+                            )
                             2 -> MembersList(members = state.members)
                         }
                     }
@@ -223,49 +235,29 @@ fun TeamDetailsScreenContent(
                     )
                 }
             }
-        }
-    }
-}
 
-@Composable
-fun EventsList(events: List<TeamEvent>) {
-    if (events.isEmpty()) {
-        AppEmptyState(
-            title = stringResource(R.string.no_events_yet),
-            description = stringResource(R.string.no_events_desc),
-            illustration = {
-                Box(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colorScheme.brand.primaryContainer),
-                    contentAlignment = Alignment.Center
+            if (state.isAddEventSheetVisible) {
+                AppBottomSheet(
+                    onDismiss = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) },
+                    title = "Add Event"
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.CalendarToday,
-                        contentDescription = null,
-                        modifier = Modifier.size(60.dp),
-                        tint = Theme.colorScheme.brand.primary
+                    AddEventSheetContent(
+                        isLoading = state.isCreatingEvent,
+                        onAddEvent = { courseId, type, date ->
+                            onIntent(TeamDetailsIntent.CreateEvent(courseId, type, date))
+                        }
                     )
                 }
             }
-        )
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(Theme.spacing.xl),
-            contentPadding = PaddingValues(top = Theme.spacing.xl, bottom = Theme.spacing.lg)
-        ) {
-            items(events) { event ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Theme.colorScheme.surface.surfaceVariant)
-                ) {
-                    Column(modifier = Modifier.padding(Theme.spacing.md)) {
-                        Text(text = event.title, style = Theme.typography.title.medium, fontWeight = FontWeight.Bold)
-                        Text(text = event.date, style = Theme.typography.body.medium)
-                        event.location?.let { Text(text = it, style = Theme.typography.body.small) }
-                    }
-                }
+
+            if (state.isEventAddedSuccessfully) {
+                AppConfirmationDialog(
+                    title = "Confirmation",
+                    description = "Your Event Has Been Added Successfully",
+                    primaryActionText = "OK",
+                    onPrimaryAction = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) },
+                    onDismiss = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) }
+                )
             }
         }
     }

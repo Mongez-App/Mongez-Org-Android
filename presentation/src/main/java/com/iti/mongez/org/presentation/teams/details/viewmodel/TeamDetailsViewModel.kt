@@ -50,6 +50,37 @@ class TeamDetailsViewModel @Inject constructor(
                 _state.update { it.copy(isAddCourseSheetVisible = !it.isAddCourseSheetVisible) }
             }
             is TeamDetailsIntent.CreateCourse -> createCourse(intent)
+            TeamDetailsIntent.ToggleAddEventSheet -> {
+                _state.update { it.copy(isAddEventSheetVisible = !it.isAddEventSheetVisible) }
+            }
+            is TeamDetailsIntent.CreateEvent -> createEvent(intent)
+            TeamDetailsIntent.DismissEventSuccessDialog -> {
+                _state.update { it.copy(isEventAddedSuccessfully = false) }
+            }
+        }
+    }
+
+    private fun createEvent(intent: TeamDetailsIntent.CreateEvent) {
+        viewModelScope.launch {
+            _state.update { it.copy(isCreatingEvent = true) }
+            kotlinx.coroutines.delay(1000)
+            
+            val newEvent = TeamEvent(
+                id = java.util.UUID.randomUUID().toString(),
+                title = intent.type,
+                date = "Tomorrow", // Simplified for mock
+                location = "Room 101",
+                description = "Mock description"
+            )
+
+            _state.update {
+                it.copy(
+                    isCreatingEvent = false,
+                    isAddEventSheetVisible = false,
+                    isEventAddedSuccessfully = true,
+                    events = it.events + newEvent
+                )
+            }
         }
     }
 
@@ -131,10 +162,24 @@ class TeamDetailsViewModel @Inject constructor(
             val mockEvents = listOf(
                 TeamEvent(
                     id = "1",
-                    title = "Monthly Tech Talk",
-                    date = "2024-09-20",
+                    title = "Midterm",
+                    date = "Tomorrow",
                     location = "Room 302",
-                    description = "Discussion about the new Android 15 features."
+                    description = "Operating Systems Midterm"
+                ),
+                TeamEvent(
+                    id = "2",
+                    title = "Project",
+                    date = "1 days left",
+                    location = "Online",
+                    description = "Operating Systems Project"
+                ),
+                TeamEvent(
+                    id = "3",
+                    title = "Quiz",
+                    date = "2 days left",
+                    location = "Room 201",
+                    description = "Mobile Using Objects Quiz"
                 )
             )
 

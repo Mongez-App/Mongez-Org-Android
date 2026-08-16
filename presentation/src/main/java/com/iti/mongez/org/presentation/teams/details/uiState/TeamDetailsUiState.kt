@@ -15,5 +15,8 @@ data class TeamDetailsUiState(
     val searchQuery: String = "",
     val filteredCourses: List<Course> = emptyList(),
     val isAddCourseSheetVisible: Boolean = false,
-    val isCreatingCourse: Boolean = false
+    val isCreatingCourse: Boolean = false,
+    val isAddEventSheetVisible: Boolean = false,
+    val isCreatingEvent: Boolean = false,
+    val isEventAddedSuccessfully: Boolean = false
 )
