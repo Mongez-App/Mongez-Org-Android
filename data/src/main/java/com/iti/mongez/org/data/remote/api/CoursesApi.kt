@@ -45,6 +45,12 @@ interface CoursesApi {
         @Path("courseId") courseId: String,
         @Path("materialId") materialId: String
     ): BaseResponseDto<Unit>
+
+    @GET("getEvents")
+    suspend fun getEvents(@Query("teamId") teamId: String): GetEventsResponseDto
+
+    @POST("createEvent")
+    suspend fun createEvent(@Body request: CreateEventRequestDto): EventDto
 }
 
 // Adding BaseResponseDto if it doesn't exist or just using a generic one

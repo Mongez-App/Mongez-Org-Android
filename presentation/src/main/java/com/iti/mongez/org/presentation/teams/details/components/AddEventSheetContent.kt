@@ -1,5 +1,6 @@
 package com.iti.mongez.org.presentation.teams.details.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,17 +26,23 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEventSheetContent(
+    courses: List<com.iti.mongez.org.domain.courses.model.Course>,
     isLoading: Boolean,
     onAddEvent: (courseId: String, type: String, date: String) -> Unit
 ) {
-    var selectedCourse by remember { mutableStateOf("") }
+    var selectedCourseName by remember { mutableStateOf("") }
+    var selectedCourseId by remember { mutableStateOf("") }
     var selectedType by remember { mutableStateOf("") }
     var eventDateUi by remember { mutableStateOf("") }
     var eventDateIso by remember { mutableStateOf("") }
 
     var showDatePicker by remember { mutableStateOf(false) }
+    var showCoursePicker by remember { mutableStateOf(false) }
+    var showTypePicker by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState()
+
+    val eventTypes = listOf("Midterm", "Quiz", "Assignment", "Project", "Exam")
 
     Column(
         modifier = Modifier
@@ -55,29 +62,44 @@ fun AddEventSheetContent(
 
         Spacer(modifier = Modifier.height(Theme.spacing.md))
 
-        // Event Course Dropdown (Mocked)
-        AppTextField(
-            value = selectedCourse,
-            onValueChange = {},
-            label = "Event Course",
-            placeholder = "Choose a course",
-            readOnly = true,
-            trailingIcon = {
-                Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-            }
-        )
+        // Event Course Dropdown
+        Box {
+            AppTextField(
+                value = selectedCourseName,
+                onValueChange = {},
+                label = "Event Course",
+                placeholder = "Choose a course",
+                readOnly = true,
+                modifier = Modifier.clickable { showCoursePicker = true },
+                enabled = false, // To make the box clickable via Modifier
+                trailingIcon = {
+                    IconButton(onClick = { showCoursePicker = true }) {
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                    }
+                }
+            )
+            // Overlay to handle clicks because AppTextField might consume them
+            Box(modifier = Modifier.matchParentSize().clickable { showCoursePicker = true })
+        }
 
-        // Event Type Dropdown (Mocked)
-        AppTextField(
-            value = selectedType,
-            onValueChange = {},
-            label = "Event Type",
-            placeholder = "Choose a event type",
-            readOnly = true,
-            trailingIcon = {
-                Icon(Icons.Default.ArrowDropDown, contentDescription = null)
-            }
-        )
+        // Event Type Dropdown
+        Box {
+            AppTextField(
+                value = selectedType,
+                onValueChange = {},
+                label = "Event Type",
+                placeholder = "Choose a event type",
+                readOnly = true,
+                modifier = Modifier.clickable { showTypePicker = true },
+                enabled = false,
+                trailingIcon = {
+                    IconButton(onClick = { showTypePicker = true }) {
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                    }
+                }
+            )
+            Box(modifier = Modifier.matchParentSize().clickable { showTypePicker = true })
+        }
 
         // Event Date Picker
         AppTextField(
@@ -96,9 +118,11 @@ fun AddEventSheetContent(
         Spacer(modifier = Modifier.height(Theme.spacing.lg))
 
         AppButton(
-            text = "Add course", // As per screenshot, though "Add event" makes more sense
+            text = "Add course", // Match screenshot
             onClick = {
-                onAddEvent(selectedCourse, selectedType, eventDateIso)
+                if (selectedCourseId.isNotEmpty() && selectedType.isNotEmpty() && eventDateIso.isNotEmpty()) {
+                    onAddEvent(selectedCourseId, selectedType, eventDateIso)
+                }
             },
             variant = AppButtonVariant.Primary,
             isLoading = isLoading
@@ -122,6 +146,55 @@ fun AddEventSheetContent(
             ) {
                 DatePicker(state = datePickerState)
             }
+        }
+
+        // Course Picker Modal/Menu
+        if (showCoursePicker) {
+            AlertDialog(
+                onDismissRequest = { showCoursePicker = false },
+                title = { Text("Select Course") },
+                text = {
+                    Column {
+                        courses.forEach { course ->
+                            TextButton(
+                                onClick = {
+                                    selectedCourseName = course.name
+                                    selectedCourseId = course.id
+                                    showCoursePicker = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(course.name, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Start)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {}
+            )
+        }
+
+        // Type Picker Modal/Menu
+        if (showTypePicker) {
+            AlertDialog(
+                onDismissRequest = { showTypePicker = false },
+                title = { Text("Select Type") },
+                text = {
+                    Column {
+                        eventTypes.forEach { type ->
+                            TextButton(
+                                onClick = {
+                                    selectedType = type
+                                    showTypePicker = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(type, modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Start)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {}
+            )
         }
     }
 }

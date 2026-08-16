@@ -242,6 +242,7 @@ fun TeamDetailsScreenContent(
                     title = "Add Event"
                 ) {
                     AddEventSheetContent(
+                        courses = state.courses,
                         isLoading = state.isCreatingEvent,
                         onAddEvent = { courseId, type, date ->
                             onIntent(TeamDetailsIntent.CreateEvent(courseId, type, date))

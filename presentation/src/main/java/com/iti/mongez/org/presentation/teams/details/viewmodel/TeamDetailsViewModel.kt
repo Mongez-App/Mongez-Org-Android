@@ -9,6 +9,8 @@ import com.iti.mongez.org.domain.courses.usecase.GetCoursesUseCase
 import com.iti.mongez.org.domain.teams.model.Member
 import com.iti.mongez.org.domain.teams.model.Team
 import com.iti.mongez.org.domain.teams.model.TeamEvent
+import com.iti.mongez.org.domain.teams.usecase.CreateTeamEventUseCase
+import com.iti.mongez.org.domain.teams.usecase.GetTeamEventsUseCase
 import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
 import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsEffect
 import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
@@ -27,7 +29,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TeamDetailsViewModel @Inject constructor(
     private val getCoursesUseCase: GetCoursesUseCase,
-    private val createCourseUseCase: CreateCourseUseCase
+    private val createCourseUseCase: CreateCourseUseCase,
+    private val getTeamEventsUseCase: GetTeamEventsUseCase,
+    private val createTeamEventUseCase: CreateTeamEventUseCase
 ) : ViewModel() {
 
     private var currentTeamId: String = ""
@@ -63,23 +67,30 @@ class TeamDetailsViewModel @Inject constructor(
     private fun createEvent(intent: TeamDetailsIntent.CreateEvent) {
         viewModelScope.launch {
             _state.update { it.copy(isCreatingEvent = true) }
-            kotlinx.coroutines.delay(1000)
             
-            val newEvent = TeamEvent(
-                id = java.util.UUID.randomUUID().toString(),
-                title = intent.type,
-                date = "Tomorrow", // Simplified for mock
-                location = "Room 101",
-                description = "Mock description"
+            val result = createTeamEventUseCase(
+                teamId = currentTeamId,
+                courseId = intent.courseId,
+                eventType = intent.type,
+                eventDate = intent.date
             )
 
-            _state.update {
-                it.copy(
-                    isCreatingEvent = false,
-                    isAddEventSheetVisible = false,
-                    isEventAddedSuccessfully = true,
-                    events = it.events + newEvent
-                )
+            when (result) {
+                is Result.Success -> {
+                    _state.update {
+                        it.copy(
+                            isCreatingEvent = false,
+                            isAddEventSheetVisible = false,
+                            isEventAddedSuccessfully = true
+                        )
+                    }
+                    loadTeam(currentTeamId)
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isCreatingEvent = false) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar(result.exception.message ?: "Failed to add event", AppSnackbarType.Error))
+                }
+                else -> {}
             }
         }
     }
@@ -127,7 +138,7 @@ class TeamDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
 
-            // 1. Load Team Info (Still mock until Team use cases are available)
+            // 1. Load Team Info (Mock until Team API is ready)
             val mockTeam = Team(
                 id = teamId,
                 name = "Java and Mobile",
@@ -137,59 +148,37 @@ class TeamDetailsViewModel @Inject constructor(
             )
 
             // 2. Load Real Courses
-            when (val result = getCoursesUseCase(teamId)) {
-                is Result.Success -> {
-                    val courses = result.data
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            team = mockTeam,
-                            courses = courses,
-                            filteredCourses = courses
-                        )
-                    }
-                }
-                is Result.Failure -> {
-                    _state.update { it.copy(isLoading = false, team = mockTeam) }
-                    _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load courses", AppSnackbarType.Error))
-                }
-                else -> {
-                    _state.update { it.copy(isLoading = false) }
-                }
+            val coursesResult = getCoursesUseCase(teamId)
+            val courses = (coursesResult as? Result.Success)?.data ?: emptyList()
+
+            // 3. Load Real Events
+            val eventsResult = getTeamEventsUseCase(teamId)
+            val events = (eventsResult as? Result.Success)?.data ?: emptyList()
+
+            _state.update {
+                it.copy(
+                    isLoading = false,
+                    team = mockTeam,
+                    courses = courses,
+                    filteredCourses = courses,
+                    events = events
+                )
             }
 
-            // Mock Data for other sections (Events/Members)
-            val mockEvents = listOf(
-                TeamEvent(
-                    id = "1",
-                    title = "Midterm",
-                    date = "Tomorrow",
-                    location = "Room 302",
-                    description = "Operating Systems Midterm"
-                ),
-                TeamEvent(
-                    id = "2",
-                    title = "Project",
-                    date = "1 days left",
-                    location = "Online",
-                    description = "Operating Systems Project"
-                ),
-                TeamEvent(
-                    id = "3",
-                    title = "Quiz",
-                    date = "2 days left",
-                    location = "Room 201",
-                    description = "Mobile Using Objects Quiz"
-                )
-            )
+            if (coursesResult is Result.Failure) {
+                _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load courses", AppSnackbarType.Error))
+            }
+            if (eventsResult is Result.Failure) {
+                _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load events", AppSnackbarType.Error))
+            }
 
+            // Mock Data for other sections (Members)
             val mockMembers = listOf(
                 Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer")
             )
 
             _state.update {
                 it.copy(
-                    events = mockEvents,
                     members = mockMembers
                 )
             }
