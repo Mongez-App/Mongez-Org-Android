@@ -53,7 +53,6 @@ class TeamDetailsRepositoryImpl @Inject constructor(
     override suspend fun declineMemberRequest(memberId: String): Result<Unit> {
         return safeApi {
             api.declineMember(MemberActionRequestDto(memberId))
-            Unit
         }
     }
 }
