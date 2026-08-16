@@ -42,7 +42,13 @@ fun AddEventSheetContent(
 
     val datePickerState = rememberDatePickerState()
 
-    val eventTypes = listOf("Midterm", "Quiz", "Assignment", "Project", "Exam")
+    val eventTypes = listOf(
+        stringResource(R.string.midterm),
+        stringResource(R.string.quiz),
+        stringResource(R.string.assignment),
+        stringResource(R.string.project),
+        stringResource(R.string.exam)
+    )
 
     Column(
         modifier = Modifier
@@ -52,7 +58,7 @@ fun AddEventSheetContent(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.lg)
     ) {
         Text(
-            text = "Add Event",
+            text = stringResource(R.string.add_event),
             style = Theme.typography.title.large,
             color = Theme.colorScheme.text.primary,
             modifier = Modifier.fillMaxWidth(),
@@ -67,8 +73,8 @@ fun AddEventSheetContent(
             AppTextField(
                 value = selectedCourseName,
                 onValueChange = {},
-                label = "Event Course",
-                placeholder = "Choose a course",
+                label = stringResource(R.string.event_course),
+                placeholder = stringResource(R.string.choose_course),
                 readOnly = true,
                 modifier = Modifier.clickable { showCoursePicker = true },
                 enabled = false, // To make the box clickable via Modifier
@@ -87,8 +93,8 @@ fun AddEventSheetContent(
             AppTextField(
                 value = selectedType,
                 onValueChange = {},
-                label = "Event Type",
-                placeholder = "Choose a event type",
+                label = stringResource(R.string.event_type),
+                placeholder = stringResource(R.string.choose_event_type),
                 readOnly = true,
                 modifier = Modifier.clickable { showTypePicker = true },
                 enabled = false,
@@ -105,7 +111,7 @@ fun AddEventSheetContent(
         AppTextField(
             value = eventDateUi,
             onValueChange = {},
-            label = "Event Date",
+            label = stringResource(R.string.event_date),
             placeholder = "DD/MM/YYYY",
             readOnly = true,
             trailingIcon = {
@@ -118,7 +124,7 @@ fun AddEventSheetContent(
         Spacer(modifier = Modifier.height(Theme.spacing.lg))
 
         AppButton(
-            text = "Add course", // Match screenshot
+            text = stringResource(R.string.button_add_course), // Match screenshot
             onClick = {
                 if (selectedCourseId.isNotEmpty() && selectedType.isNotEmpty() && eventDateIso.isNotEmpty()) {
                     onAddEvent(selectedCourseId, selectedType, eventDateIso)
@@ -140,7 +146,7 @@ fun AddEventSheetContent(
                         }
                         showDatePicker = false
                     }) {
-                        Text("OK")
+                        Text(stringResource(R.string.action_ok))
                     }
                 }
             ) {
@@ -152,7 +158,7 @@ fun AddEventSheetContent(
         if (showCoursePicker) {
             AlertDialog(
                 onDismissRequest = { showCoursePicker = false },
-                title = { Text("Select Course") },
+                title = { Text(stringResource(R.string.select_course)) },
                 text = {
                     Column {
                         courses.forEach { course ->
@@ -177,7 +183,7 @@ fun AddEventSheetContent(
         if (showTypePicker) {
             AlertDialog(
                 onDismissRequest = { showTypePicker = false },
-                title = { Text("Select Type") },
+                title = { Text(stringResource(R.string.select_type)) },
                 text = {
                     Column {
                         eventTypes.forEach { type ->

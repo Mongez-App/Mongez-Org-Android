@@ -1,11 +1,17 @@
 package com.iti.mongez.org.presentation.teams.details.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.iti.mongez.org.designsystem.components.common.AppEmptyState
@@ -24,15 +30,27 @@ fun TeamEventsList(
     if (events.isEmpty()) {
         Box(
             modifier = modifier.fillMaxSize(),
-            contentAlignment = androidx.compose.ui.Alignment.Center
+            contentAlignment = Alignment.Center
         ) {
             AppEmptyState(
-                title = "No Events Yet",
-                description = "You don’t have scheduled events for this team",
-                actionText = "Let’s Add an Event",
+                title = stringResource(R.string.no_events_yet_team),
+                description = stringResource(R.string.no_events_team_desc),
+                actionText = stringResource(R.string.lets_add_event),
                 onAction = onAddEventClick,
                 illustration = {
-                    // TODO: Add proper illustration if available
+                    Box(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(CircleShape)
+                            .background(Theme.colorScheme.brand.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_empty_events),
+                            contentDescription = null,
+                            modifier = Modifier.size(110.dp)
+                        )
+                    }
                 }
             )
         }
@@ -46,7 +64,7 @@ fun TeamEventsList(
         ) {
             items(events) { event ->
                 // Mock mapping to UI fields for now
-                val colors = TeamEventColor.values()
+                val colors = TeamEventColor.entries
                 val color = colors[event.hashCode().coerceAtLeast(0) % colors.size]
                 
                 TeamEventCard(

@@ -1,15 +1,19 @@
 package com.iti.mongez.org.presentation.teams.details.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Group
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -17,6 +21,7 @@ import com.iti.mongez.org.designsystem.components.common.AppEmptyState
 import com.iti.mongez.org.designsystem.screens.teams.TeamMemberCard
 import com.iti.mongez.org.designsystem.theme.Theme
 import com.iti.mongez.org.domain.teams.model.Member
+import com.iti.mongez.org.presentation.R
 
 @Composable
 fun TeamMembersTabContent(
@@ -42,7 +47,7 @@ fun TeamMembersTabContent(
         // Pending Members Section
         item {
             Text(
-                text = "Pending Members",
+                text = stringResource(R.string.pending_members),
                 style = Theme.typography.title.medium,
                 color = Theme.colorScheme.text.primary,
                 fontWeight = FontWeight.Bold,
@@ -53,7 +58,7 @@ fun TeamMembersTabContent(
         if (pendingMembers.isEmpty()) {
             item {
                 Text(
-                    text = "No Pending Members for the Current time",
+                    text = stringResource(R.string.no_pending_members_desc),
                     style = Theme.typography.body.medium,
                     color = Theme.colorScheme.text.tertiary,
                     modifier = Modifier
@@ -79,7 +84,7 @@ fun TeamMembersTabContent(
         item {
             Spacer(modifier = Modifier.height(Theme.spacing.lg))
             Text(
-                text = "Team Members",
+                text = stringResource(R.string.team_members),
                 style = Theme.typography.title.medium,
                 color = Theme.colorScheme.text.primary,
                 fontWeight = FontWeight.Bold
@@ -90,14 +95,15 @@ fun TeamMembersTabContent(
             item {
                 AppEmptyState(
                     title = "",
-                    description = "No team members added yet",
+                    description = stringResource(R.string.no_team_members_added_yet),
                     illustration = {
-                        Icon(
-                            imageVector = Icons.Rounded.Group,
-                            contentDescription = null,
-                            modifier = Modifier.size(120.dp),
-                            tint = Color(0xFF6366F1).copy(alpha = 0.8f) // Matching screenshot color roughly
-                        )
+
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_empty_members),
+                                contentDescription = null,
+                                modifier = Modifier.size(110.dp)
+                            )
+
                     }
                 )
             }

@@ -240,13 +240,6 @@ fun AppNavHost(
                         onNavigateToLogin = {
                             backStack.clear()
                             backStack.add(AppRoute.Login)
-                        },
-                        coursesTabContent = {
-                            TeamDetailsScreen(
-                                teamId = "a9bff20a-3bef-448d-a9b6-78b54e7def34", // Default team ID
-                                onNavigateBack = {}, // Not applicable in tab
-                                onNavigateToCourseDetails = { courseId: String -> backStack.add(AppRoute.CourseDetails(courseId)) }
-                            )
                         }
                     )
                 }

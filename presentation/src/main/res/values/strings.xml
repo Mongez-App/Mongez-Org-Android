@@ -72,4 +72,30 @@
     <string name="filter_high">High</string>
     <string name="filter_medium">Medium</string>
     <string name="filter_low">Low</string>
+
+    <!-- Events & Members -->
+    <string name="add_event">Add Event</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="event_added_successfully">Your Event Has Been Added Successfully</string>
+    <string name="no_events_yet_team">No Events Yet</string>
+    <string name="no_events_team_desc">You don’t have scheduled events for this team</string>
+    <string name="lets_add_event">Let’s Add an Event</string>
+    <string name="pending_members">Pending Members</string>
+    <string name="no_pending_members_desc">No Pending Members for the Current time</string>
+    <string name="team_members">Team Members</string>
+    <string name="no_team_members_added_yet">No team members added yet</string>
+    <string name="event_course">Event Course</string>
+    <string name="choose_course">Choose a course</string>
+    <string name="event_type">Event Type</string>
+    <string name="choose_event_type">Choose an event type</string>
+    <string name="event_date">Event Date</string>
+    <string name="select_course">Select Course</string>
+    <string name="select_type">Select Type</string>
+    <string name="midterm">Midterm</string>
+    <string name="quiz">Quiz</string>
+    <string name="assignment">Assignment</string>
+    <string name="project">Project</string>
+    <string name="exam">Exam</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
 </resources>

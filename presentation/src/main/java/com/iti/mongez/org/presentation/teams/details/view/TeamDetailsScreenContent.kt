@@ -109,7 +109,7 @@ fun TeamDetailsScreenContent(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.back),
                             tint = Theme.colorScheme.text.primary
                         )
                     }
@@ -155,7 +155,11 @@ fun TeamDetailsScreenContent(
                         .fillMaxSize()
                         .padding(padding)
                 ) {
-                    val tabs = listOf("Courses", "Events", "Members")
+                    val tabs = listOf(
+                        stringResource(R.string.courses),
+                        stringResource(R.string.events),
+                        stringResource(R.string.members)
+                    )
                     AppPrimaryTabs(
                         tabs = tabs,
                         selectedTabIndex = state.selectedTabIndex,
@@ -245,7 +249,7 @@ fun TeamDetailsScreenContent(
             if (state.isAddEventSheetVisible) {
                 AppBottomSheet(
                     onDismiss = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) },
-                    title = "Add Event"
+                    title = stringResource(R.string.add_event)
                 ) {
                     AddEventSheetContent(
                         courses = state.courses,
@@ -259,9 +263,9 @@ fun TeamDetailsScreenContent(
 
             if (state.isEventAddedSuccessfully) {
                 AppConfirmationDialog(
-                    title = "Confirmation",
-                    description = "Your Event Has Been Added Successfully",
-                    primaryActionText = "OK",
+                    title = stringResource(R.string.confirmation),
+                    description = stringResource(R.string.event_added_successfully),
+                    primaryActionText = stringResource(R.string.action_ok),
                     onPrimaryAction = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) },
                     onDismiss = { onIntent(TeamDetailsIntent.DismissEventSuccessDialog) }
                 )

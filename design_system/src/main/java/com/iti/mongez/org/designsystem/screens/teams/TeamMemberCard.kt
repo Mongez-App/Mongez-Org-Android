@@ -12,12 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iti.mongez.org.designsystem.theme.MongezTheme
 import com.iti.mongez.org.designsystem.theme.Theme
+import com.iti.mongez.org.designsystem.R as DesignR
 
 @Composable
 fun TeamMemberCard(
@@ -90,7 +92,7 @@ fun TeamMemberCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Decline",
+                    text = stringResource(id = DesignR.string.decline),
                     style = Theme.typography.body.small.copy(fontWeight = FontWeight.Medium),
                     color = Theme.colorScheme.state.error,
                     modifier = Modifier.clickable { onDecline() }
@@ -103,7 +105,7 @@ fun TeamMemberCard(
                 )
 
                 Text(
-                    text = "Accept",
+                    text = stringResource(id = DesignR.string.accept),
                     style = Theme.typography.body.small.copy(fontWeight = FontWeight.Medium),
                     color = Theme.colorScheme.state.success,
                     modifier = Modifier.clickable { onAccept() }
