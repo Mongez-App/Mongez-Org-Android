@@ -8,53 +8,41 @@ import androidx.compose.ui.graphics.Color
  * Use [com.iti.mongez.org.designsystem.theme.Theme.colorScheme] instead.
  */
 internal object PrimitiveColors {
-    // region Specific App Shades
-    // Pair 1: Primary
-    val Purple200 = Color(0xFFDDD6FE)
-    val PurpleDark = Color(0xFFA691E3)
+    // region Corrected App Shades
+    // Primary
+    val PrimaryLight = Color(0xFF5A67D8)
+    val PrimaryDark = Color(0xFFA691E3)
 
-    // Pair 2: Text Primary
-    val Black100 = Color(0xFF101828)
-    val GrayLightDark = Color(0xFFAFB0BD)
+    // Text Primary
+    val TextPrimaryLight = Color(0xFF0F172A)
+    val TextPrimaryDark = Color(0xFFAFB0BD)
 
-    // Pair 3: Background
-    val White = Color(0xFFF9F9FF)
-    val BlackDark = Color(0xFF04001B)
+    // Background
+    val BackgroundLight = Color(0xFFF9F9FF)
+    val BackgroundDark = Color(0xFF04001B)
 
-    // Pair 4: Borders
-    val Gray350 = Color(0xFFD1D5DB)
-    val GrayBorderDark = Color(0xFFB4BACD)
+    // Border
+    val BorderLight = Color(0xFFD1D5DB)
+    val BorderDark = Color(0xFFB4BACD)
 
-    // Pair 5: Text Secondary
-    val Gray450 = Color(0xFFBCBCBE)
-    val GraySecondaryDark = Color(0xFFB6ACCD)
+    // Text Secondary
+    val TextSecondaryLight = Color(0xFFBCBCBE)
+    val TextSecondaryDark = Color(0xFFB6ACCD)
 
-    // Pair 6: Text Tertiary
-    val GrayTertiaryLight = Color(0xFFB0B0B3)
-    val GrayTertiaryDark = Color(0xFFB6ACCD)
+    // Info
+    val InfoLight = Color(0xFF3B82F6)
+    val InfoDark = Color(0xFF959FF7)
 
-    // Pair 7: Blue
-    val Blue500 = Color(0xFF3B82F6)
-    val BlueDark = Color(0xFF959FF7)
+    // Success
+    val SuccessLight = Color(0xFF10B981)
+    val SuccessDark = Color(0xFF10B981)
 
-    // Pair 8: Green
-    val Green500 = Color(0xFF10B981)
-    val GreenDark = Color(0xFF10B981)
-
-    // Pair 9: Purple (Roadmap)
-    val PurpleRoadmapLight = Color(0xFFA855F7)
-    val PurpleRoadmapDark = Color(0xFFC15AF3)
-
-    // Pair 10: Red
-    val Red500 = Color(0xFFEF4444)
-    val RedDark = Color(0xFFEF4444)
-
-    // Pair 11: Error Container/Variant
+    // Error
     val ErrorLight = Color(0xFFEF4444)
-    val ErrorDark = Color(0xFFF1CB84)
+    val ErrorDark = Color(0xFFEF4444)
 
-    // Pair 12: Orange
-    val OrangeRoadmapLight = Color(0xFFF1CB84)
-    val OrangeRoadmapDark = Color(0xFFF6B576)
+    // Warning
+    val WarningLight = Color(0xFFF1CB84)
+    val WarningDark = Color(0xFFF6B576)
     // endregion
 }
