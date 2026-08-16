@@ -24,6 +24,9 @@ sealed interface TeamDetailsIntent {
     ) : TeamDetailsIntent
 
     object DismissEventSuccessDialog : TeamDetailsIntent
+
+    data class AcceptMember(val memberId: String) : TeamDetailsIntent
+    data class DeclineMember(val memberId: String) : TeamDetailsIntent
 }
 
 sealed interface TeamDetailsEffect {

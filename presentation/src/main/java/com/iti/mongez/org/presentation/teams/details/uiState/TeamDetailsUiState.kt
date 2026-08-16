@@ -11,6 +11,7 @@ data class TeamDetailsUiState(
     val courses: List<Course> = emptyList(),
     val events: List<TeamEvent> = emptyList(),
     val members: List<Member> = emptyList(),
+    val pendingMembers: List<Member> = emptyList(),
     val selectedTabIndex: Int = 0,
     val searchQuery: String = "",
     val filteredCourses: List<Course> = emptyList(),

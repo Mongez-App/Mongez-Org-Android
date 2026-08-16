@@ -61,6 +61,26 @@ class TeamDetailsViewModel @Inject constructor(
             TeamDetailsIntent.DismissEventSuccessDialog -> {
                 _state.update { it.copy(isEventAddedSuccessfully = false) }
             }
+            is TeamDetailsIntent.AcceptMember -> acceptMember(intent.memberId)
+            is TeamDetailsIntent.DeclineMember -> declineMember(intent.memberId)
+        }
+    }
+
+    private fun acceptMember(memberId: String) {
+        val memberToAccept = _state.value.pendingMembers.find { it.id == memberId } ?: return
+        _state.update {
+            it.copy(
+                pendingMembers = it.pendingMembers.filter { m -> m.id != memberId },
+                members = it.members + memberToAccept
+            )
+        }
+    }
+
+    private fun declineMember(memberId: String) {
+        _state.update {
+            it.copy(
+                pendingMembers = it.pendingMembers.filter { m -> m.id != memberId }
+            )
         }
     }
 
@@ -174,12 +194,19 @@ class TeamDetailsViewModel @Inject constructor(
 
             // Mock Data for other sections (Members)
             val mockMembers = listOf(
-                Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer")
+                Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer"),
+                Member(id = "2", name = "Sara Mohamed", role = "UI/UX Designer"),
+                Member(id = "3", name = "John Doe", role = "Backend Engineer")
+            )
+            val mockPendingMembers = listOf(
+                Member(id = "4", name = "Member Name", role = "Applicant"),
+                Member(id = "5", name = "Member Name", role = "Applicant")
             )
 
             _state.update {
                 it.copy(
-                    members = mockMembers
+                    members = mockMembers,
+                    pendingMembers = mockPendingMembers
                 )
             }
         }

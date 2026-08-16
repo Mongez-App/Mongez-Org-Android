@@ -46,6 +46,7 @@ import com.iti.mongez.org.presentation.courses.components.AddCourseSheetContent
 import com.iti.mongez.org.presentation.courses.components.CoursesList
 import com.iti.mongez.org.presentation.teams.details.components.AddEventSheetContent
 import com.iti.mongez.org.presentation.teams.details.components.TeamEventsList
+import com.iti.mongez.org.presentation.teams.details.components.TeamMembersTabContent
 import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
 import com.iti.mongez.org.presentation.teams.details.uiState.TeamDetailsUiState
 import com.iti.mongez.org.domain.teams.model.TeamEvent
@@ -205,7 +206,12 @@ fun TeamDetailsScreenContent(
                                 events = state.events,
                                 onAddEventClick = { onIntent(TeamDetailsIntent.ToggleAddEventSheet) }
                             )
-                            2 -> MembersList(members = state.members)
+                            2 -> TeamMembersTabContent(
+                                members = state.members,
+                                pendingMembers = state.pendingMembers,
+                                onAcceptMember = { onIntent(TeamDetailsIntent.AcceptMember(it)) },
+                                onDeclineMember = { onIntent(TeamDetailsIntent.DeclineMember(it)) }
+                            )
                         }
                     }
                 }
@@ -265,52 +271,6 @@ fun TeamDetailsScreenContent(
 }
 
 @Composable
-fun MembersList(members: List<Member>) {
-    if (members.isEmpty()) {
-        AppEmptyState(
-            title = stringResource(R.string.no_members_yet),
-            description = stringResource(R.string.no_members_desc),
-            illustration = {
-                Box(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .clip(CircleShape)
-                        .background(Theme.colorScheme.brand.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Group,
-                        contentDescription = null,
-                        modifier = Modifier.size(60.dp),
-                        tint = Theme.colorScheme.brand.primary
-                    )
-                }
-            }
-        )
-    } else {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(Theme.spacing.xl),
-            contentPadding = PaddingValues(top = Theme.spacing.xl, bottom = Theme.spacing.lg)
-        ) {
-            items(members) { member ->
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Theme.colorScheme.surface.surfaceVariant)
-                ) {
-                    Row(modifier = Modifier.padding(Theme.spacing.md)) {
-                        Column {
-                            Text(text = member.name, style = Theme.typography.title.medium, fontWeight = FontWeight.Bold)
-                            Text(text = member.role, style = Theme.typography.body.medium)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
 fun TeamDetailsScreenContentPreview() {
     val sampleTeam = Team(
         id = "1",
@@ -362,6 +322,10 @@ fun TeamDetailsScreenContentPreview() {
         Member(id = "2", name = "Sara Jones", role = "UI/UX Designer")
     )
 
+    val samplePendingMembers = listOf(
+        Member(id = "3", name = "John Doe", role = "Applicant")
+    )
+
     val state = TeamDetailsUiState(
         isLoading = false,
         team = sampleTeam,
@@ -369,6 +333,7 @@ fun TeamDetailsScreenContentPreview() {
         filteredCourses = sampleCourses,
         events = sampleEvents,
         members = sampleMembers,
+        pendingMembers = samplePendingMembers,
         selectedTabIndex = 0
     )
 
@@ -438,6 +403,10 @@ fun TeamDetailsScreenContentDarkPreview() {
         Member(id = "2", name = "Sara Jones", role = "UI/UX Designer")
     )
 
+    val samplePendingMembers = listOf(
+        Member(id = "3", name = "John Doe", role = "Applicant")
+    )
+
     val state = TeamDetailsUiState(
         isLoading = false,
         team = sampleTeam,
@@ -445,6 +414,7 @@ fun TeamDetailsScreenContentDarkPreview() {
         filteredCourses = sampleCourses,
         events = sampleEvents,
         members = sampleMembers,
+        pendingMembers = samplePendingMembers,
         selectedTabIndex = 0
     )
 
