@@ -133,11 +133,6 @@ private val previewItems = listOf(
         unselectedIcon = R.drawable.ic_sparkle,
     ),
     AppNavigationBarItem(
-        label = "Courses",
-        selectedIcon = R.drawable.ic_sparkle,
-        unselectedIcon = R.drawable.ic_sparkle,
-    ),
-    AppNavigationBarItem(
         label = "Roadmap",
         selectedIcon = R.drawable.ic_sparkle,
         unselectedIcon = R.drawable.ic_sparkle,

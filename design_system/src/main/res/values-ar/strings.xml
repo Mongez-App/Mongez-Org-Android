@@ -97,4 +97,6 @@
     <string name="review_under_review">قيد المراجعة</string>
     <string name="review_under_review_desc">طلب انضمامك إلى منجز قيد المراجعة من قبل مسؤولي منجز. سنعلمك بمجرد التحقق.</string>
     <string name="review_back_to_login">الرجوع لتسجيل الدخول</string>
+    <string name="decline">رفض</string>
+    <string name="accept">قبول</string>
 </resources>

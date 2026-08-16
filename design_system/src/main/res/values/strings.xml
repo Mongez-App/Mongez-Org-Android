@@ -96,4 +96,6 @@
     <string name="review_under_review">Under Review</string>
     <string name="review_under_review_desc">Your request to join Mongez is under review by Mongez admins. We will notify you once verified.</string>
     <string name="review_back_to_login">Back to Login</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
 </resources>

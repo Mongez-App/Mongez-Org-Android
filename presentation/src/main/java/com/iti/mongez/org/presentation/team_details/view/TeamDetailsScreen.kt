@@ -1,4 +1,4 @@
-package com.iti.mongez.org.presentation.teams.details.view
+package com.iti.mongez.org.presentation.team_details.view
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.unit.dp
@@ -7,8 +7,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
-import com.iti.mongez.org.presentation.teams.details.viewmodel.TeamDetailsViewModel
+import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsIntent
+import com.iti.mongez.org.presentation.team_details.viewmodel.TeamDetailsViewModel
+
 
 @Composable
 fun TeamDetailsScreen(

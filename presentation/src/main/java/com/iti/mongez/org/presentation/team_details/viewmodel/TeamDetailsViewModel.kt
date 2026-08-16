@@ -1,20 +1,20 @@
-package com.iti.mongez.org.presentation.teams.details.viewmodel
+package com.iti.mongez.org.presentation.team_details.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.mongez.org.domain.core.Result
-import com.iti.mongez.org.domain.courses.model.Course
 import com.iti.mongez.org.domain.courses.usecase.CreateCourseUseCase
 import com.iti.mongez.org.domain.courses.usecase.GetCoursesUseCase
-import com.iti.mongez.org.domain.teams.model.Member
-import com.iti.mongez.org.domain.teams.model.Team
-import com.iti.mongez.org.domain.teams.model.TeamEvent
-import com.iti.mongez.org.domain.teams.usecase.CreateTeamEventUseCase
-import com.iti.mongez.org.domain.teams.usecase.GetTeamEventsUseCase
+import com.iti.mongez.org.domain.team_details.model.Team
+import com.iti.mongez.org.domain.team_details.usecase.AcceptMemberRequestUseCase
+import com.iti.mongez.org.domain.team_details.usecase.CreateTeamEventUseCase
+import com.iti.mongez.org.domain.team_details.usecase.DeclineMemberRequestUseCase
+import com.iti.mongez.org.domain.team_details.usecase.GetTeamEventsUseCase
+import com.iti.mongez.org.domain.team_details.usecase.GetTeamMembersUseCase
 import com.iti.mongez.org.designsystem.components.snackbar.AppSnackbarType
-import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsEffect
-import com.iti.mongez.org.presentation.teams.details.contract.TeamDetailsIntent
-import com.iti.mongez.org.presentation.teams.details.uiState.TeamDetailsUiState
+import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsEffect
+import com.iti.mongez.org.presentation.team_details.contract.TeamDetailsIntent
+import com.iti.mongez.org.presentation.team_details.uiState.TeamDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,10 @@ class TeamDetailsViewModel @Inject constructor(
     private val getCoursesUseCase: GetCoursesUseCase,
     private val createCourseUseCase: CreateCourseUseCase,
     private val getTeamEventsUseCase: GetTeamEventsUseCase,
-    private val createTeamEventUseCase: CreateTeamEventUseCase
+    private val createTeamEventUseCase: CreateTeamEventUseCase,
+    private val getTeamMembersUseCase: GetTeamMembersUseCase,
+    private val acceptMemberRequestUseCase: AcceptMemberRequestUseCase,
+    private val declineMemberRequestUseCase: DeclineMemberRequestUseCase
 ) : ViewModel() {
 
     private var currentTeamId: String = ""
@@ -60,6 +63,42 @@ class TeamDetailsViewModel @Inject constructor(
             is TeamDetailsIntent.CreateEvent -> createEvent(intent)
             TeamDetailsIntent.DismissEventSuccessDialog -> {
                 _state.update { it.copy(isEventAddedSuccessfully = false) }
+            }
+            is TeamDetailsIntent.AcceptMember -> acceptMember(intent.memberId)
+            is TeamDetailsIntent.DeclineMember -> declineMember(intent.memberId)
+        }
+    }
+
+    private fun acceptMember(memberId: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = acceptMemberRequestUseCase(memberId)) {
+                is Result.Success -> {
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar("Member accepted successfully", AppSnackbarType.Success))
+                    loadTeam(currentTeamId)
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar(result.exception.message ?: "Failed to accept member", AppSnackbarType.Error))
+                }
+                else -> {}
+            }
+        }
+    }
+
+    private fun declineMember(memberId: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            when (val result = declineMemberRequestUseCase(memberId)) {
+                is Result.Success -> {
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar("Request declined", AppSnackbarType.Success))
+                    loadTeam(currentTeamId)
+                }
+                is Result.Failure -> {
+                    _state.update { it.copy(isLoading = false) }
+                    _effect.emit(TeamDetailsEffect.ShowSnackbar(result.exception.message ?: "Failed to decline member", AppSnackbarType.Error))
+                }
+                else -> {}
             }
         }
     }
@@ -155,13 +194,19 @@ class TeamDetailsViewModel @Inject constructor(
             val eventsResult = getTeamEventsUseCase(teamId)
             val events = (eventsResult as? Result.Success)?.data ?: emptyList()
 
+            // 4. Load Real Members
+            val membersResult = getTeamMembersUseCase(teamId)
+            val teamMembersData = (membersResult as? Result.Success)?.data
+
             _state.update {
                 it.copy(
                     isLoading = false,
                     team = mockTeam,
                     courses = courses,
                     filteredCourses = courses,
-                    events = events
+                    events = events,
+                    members = teamMembersData?.teamMembers ?: emptyList(),
+                    pendingMembers = teamMembersData?.pendingMembers ?: emptyList()
                 )
             }
 
@@ -171,16 +216,8 @@ class TeamDetailsViewModel @Inject constructor(
             if (eventsResult is Result.Failure) {
                 _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load events", AppSnackbarType.Error))
             }
-
-            // Mock Data for other sections (Members)
-            val mockMembers = listOf(
-                Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer")
-            )
-
-            _state.update {
-                it.copy(
-                    members = mockMembers
-                )
+            if (membersResult is Result.Failure) {
+                _effect.emit(TeamDetailsEffect.ShowSnackbar("Failed to load members", AppSnackbarType.Error))
             }
         }
     }

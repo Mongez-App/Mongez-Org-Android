@@ -29,15 +29,14 @@ import com.iti.mongez.org.designsystem.theme.Theme
 import com.iti.mongez.org.presentation.R
 import com.iti.mongez.org.presentation.profile.ProfileScreen
 import com.iti.mongez.org.presentation.profile.ProfileViewModel
+import com.iti.mongez.org.presentation.teams.TeamsScreen
+import com.iti.mongez.org.presentation.teams.TeamsViewModel
 
 @Composable
 fun MainScreen(
     onNavigateToCourseDetails: (String) -> Unit,
     onNavigateToTeamDetails: (String) -> Unit,
-    onNavigateToLogin: () -> Unit = {},
-    coursesTabContent: @Composable () -> Unit = {
-        Text(text = "Courses Screen Placeholder")
-    }
+    onNavigateToLogin: () -> Unit = {}
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val selectedTab = MainTab.fromIndex(selectedTabIndex)
@@ -64,8 +63,7 @@ fun MainScreen(
             innerPadding = innerPadding,
             onNavigateToCourseDetails = onNavigateToCourseDetails,
             onNavigateToTeamDetails = onNavigateToTeamDetails,
-            onNavigateToLogin = onNavigateToLogin,
-            coursesTabContent = coursesTabContent
+            onNavigateToLogin = onNavigateToLogin
         )
     }
 }
@@ -76,8 +74,7 @@ private fun MainScreenContent(
     innerPadding: PaddingValues,
     onNavigateToCourseDetails: (String) -> Unit,
     onNavigateToTeamDetails: (String) -> Unit,
-    onNavigateToLogin: () -> Unit,
-    coursesTabContent: @Composable () -> Unit
+    onNavigateToLogin: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -108,8 +105,8 @@ private fun MainScreenContent(
                 }
             }
             MainTab.Teams -> {
-                val teamsViewModel: com.iti.mongez.org.presentation.teams.TeamsViewModel = hiltViewModel()
-                com.iti.mongez.org.presentation.teams.TeamsScreen(
+                val teamsViewModel: TeamsViewModel = hiltViewModel()
+                TeamsScreen(
                     viewModel = teamsViewModel,
                     onNavigateToCourseDetails = onNavigateToCourseDetails
                 )
