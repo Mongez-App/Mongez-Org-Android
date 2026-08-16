@@ -34,8 +34,8 @@ import com.iti.mongez.org.presentation.teams.TeamsViewModel
 
 @Composable
 fun MainScreen(
-    onNavigateToCourseDetails: (String) -> Unit,
-    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToCourseDetails: (String) -> Unit = {},
+    onNavigateToTeamDetails: (String, String) -> Unit = { _, _ -> },
     onNavigateToLogin: () -> Unit = {}
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -73,7 +73,7 @@ private fun MainScreenContent(
     tab: MainTab,
     innerPadding: PaddingValues,
     onNavigateToCourseDetails: (String) -> Unit,
-    onNavigateToTeamDetails: (String) -> Unit,
+    onNavigateToTeamDetails: (String, String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
     Box(
@@ -108,7 +108,8 @@ private fun MainScreenContent(
                 val teamsViewModel: TeamsViewModel = hiltViewModel()
                 TeamsScreen(
                     viewModel = teamsViewModel,
-                    onNavigateToCourseDetails = onNavigateToCourseDetails
+                    onNavigateToCourseDetails = onNavigateToCourseDetails,
+                    onNavigateToTeamDetails = onNavigateToTeamDetails
                 )
             }
             MainTab.Profile -> {

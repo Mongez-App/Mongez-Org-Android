@@ -17,7 +17,7 @@ The presentation layer operates on a unidirectional data flow governed by specif
 
 To prevent repository bloat, data coordination is handled per *App Flow* rather than per feature.
 
-*   **App Flow Repositories:** Coordinators that manage data operations for a complete user journey (e.g., `AuthenticationFlowRepository`, `TeamManagementFlowRepository`, `CourseManagementFlowRepository`, `MemberManagementFlowRepository`). They orchestrate multiple data sources to serve the domain layer.
+*   **App Flow Repositories:** Coordinators that manage data operations for a complete user journey (e.g., `AuthenticationFlowRepository`, `TeamsRepository`, `CourseManagementFlowRepository`, `MemberManagementFlowRepository`). They orchestrate multiple data sources to serve the domain layer.
 *   **Use Case Interactors:** Granular, single-responsibility agents residing in the Domain layer. They execute specific business rules, such as validating member invitations, scheduling AI-generated tasks, or managing team course assignments.
 
 ## 3. AI & Business Logic Agents

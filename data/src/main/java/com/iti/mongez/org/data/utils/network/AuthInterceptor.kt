@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.iti.mongez.org.data.local.AuthProgressDataStore
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
@@ -18,9 +19,19 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val requestBuilder = originalRequest.newBuilder()
 
-        // 1. Fetch token from local DataStore
+        // 1. Fetch fresh token directly from Firebase Auth
         val token = runBlocking {
-            authProgressDataStore.getToken()
+            try {
+                val freshToken = firebaseAuth.currentUser?.getIdToken(false)?.await()?.token
+                if (freshToken != null) {
+                    authProgressDataStore.saveToken(freshToken)
+                    freshToken
+                } else {
+                    authProgressDataStore.getToken()
+                }
+            } catch (e: Exception) {
+                authProgressDataStore.getToken()
+            }
         }
 
         if (!token.isNullOrEmpty()) {

@@ -7,14 +7,14 @@ import com.iti.mongez.org.data.utils.network.safeApi
 import com.iti.mongez.org.domain.core.Result
 import com.iti.mongez.org.domain.team.model.Event
 import com.iti.mongez.org.domain.team.model.Team
-import com.iti.mongez.org.domain.team.repository.TeamManagementFlowRepository
+import com.iti.mongez.org.domain.team.repository.TeamsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class TeamManagementFlowRepositoryImpl @Inject constructor(
+class TeamsRepositoryImpl @Inject constructor(
     private val teamsApi: TeamsApi
-) : TeamManagementFlowRepository {
+) : TeamsRepository {
 
     override fun getTeams(): Flow<Result<List<Team>>> = flow {
         emit(Result.Loading)

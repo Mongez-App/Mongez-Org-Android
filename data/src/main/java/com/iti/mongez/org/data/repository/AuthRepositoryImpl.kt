@@ -37,6 +37,7 @@ class AuthRepositoryImpl @Inject constructor(
             val token = firebaseAuthDataSource.signInWithEmail(email, password)
             android.util.Log.d("AuthRepository", "Firebase Token : $token")
             authProgressDataStore.saveToken(token)
+            authProgressDataStore.saveStep(5)
             
             val response = authApi.login()
             response.data?.toDomain() ?: throw AppException.UnknownException("Login returned empty data")
@@ -47,9 +48,15 @@ class AuthRepositoryImpl @Inject constructor(
         return safeApi {
             val token = firebaseAuthDataSource.signInWithGoogleCredential(idToken)
             authProgressDataStore.saveToken(token)
+            authProgressDataStore.saveStep(2)
             
-            val response = authApi.login()
-            response.data?.toDomain() ?: throw AppException.UnknownException("Google login returned empty data")
+            try {
+                val response = authApi.login()
+                response.data?.toDomain() ?: Organization(uid = "", email = "", name = "", avatar = null, description = null, establishedAt = null, noOfStudents = 0, noOfCourses = 0, noOfTeams = 0)
+            } catch (e: Exception) {
+                // If login fails (e.g. org not created on backend yet), proceed anyway to complete registration
+                Organization(uid = "", email = "", name = "", avatar = null, description = null, establishedAt = null, noOfStudents = 0, noOfCourses = 0, noOfTeams = 0)
+            }
         }
     }
 
