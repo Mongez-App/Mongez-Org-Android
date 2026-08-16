@@ -1,0 +1,13 @@
+package com.iti.mongez.org.domain.courses.usecase
+
+import com.iti.mongez.org.domain.courses.model.Course
+import com.iti.mongez.org.domain.courses.repository.CoursesRepository
+import javax.inject.Inject
+
+class GetCourseDetailsUseCase @Inject constructor(
+    private val coursesRepository: CoursesRepository
+) {
+    suspend operator fun invoke(courseId: String): Result<Course> {
+        return coursesRepository.getCourseDetails(courseId)
+    }
+}
