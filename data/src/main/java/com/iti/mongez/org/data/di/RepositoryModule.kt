@@ -43,7 +43,9 @@ abstract class RepositoryModule {
     abstract fun bindProfileRepository(
         profileRepositoryImpl: ProfileRepositoryImpl
     ): ProfileRepository
-  
+
+    @Binds
+    @Singleton
     abstract fun bindTeamsRepository(
         teamsRepositoryImpl: TeamsRepositoryImpl
     ): TeamsRepository
