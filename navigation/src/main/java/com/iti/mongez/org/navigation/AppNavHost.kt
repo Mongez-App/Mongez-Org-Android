@@ -1,5 +1,8 @@
 package com.iti.mongez.org.navigation
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavEntry
@@ -37,6 +41,12 @@ import com.iti.mongez.org.presentation.auth.register.viewmodel.RegisterViewModel
 import com.iti.mongez.org.presentation.coursedetails.view.CourseDetailsScreen
 import com.iti.mongez.org.presentation.courses.view.CoursesScreen
 import com.iti.mongez.org.presentation.main.MainScreen
+import com.iti.mongez.org.presentation.subscription.checkout.PaymobWebViewActivity
+import com.iti.mongez.org.presentation.subscription.gate.SubscriptionGateViewModel
+import com.iti.mongez.org.presentation.subscription.planselection.contract.PlanSelectionIntent
+import com.iti.mongez.org.presentation.subscription.planselection.uiState.PlanSelectionEffect
+import com.iti.mongez.org.presentation.subscription.planselection.view.PlanSelectionScreen
+import com.iti.mongez.org.presentation.subscription.planselection.viewmodel.PlanSelectionViewModel
 import com.iti.mongez.org.presentation.team_details.view.TeamDetailsScreen
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
@@ -54,30 +64,42 @@ fun AppNavHost(
     
     var snackbarVisible by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
-    
-    val showErrorSnackbar: (String) -> Unit = { message ->
+    var snackbarType by remember { mutableStateOf(AppSnackbarType.Error) }
+
+    val showSnackbar: (String, AppSnackbarType) -> Unit = { message, type ->
         snackbarMessage = message
+        snackbarType = type
         snackbarVisible = true
     }
-    
+    val showErrorSnackbar: (String) -> Unit = { message -> showSnackbar(message, AppSnackbarType.Error) }
+
     LaunchedEffect(snackbarVisible) {
         if (snackbarVisible) {
             delay(3000.milliseconds)
             snackbarVisible = false
         }
     }
-    
+
     // Hoist RegisterViewModel so it's shared across all registration steps.
     // In a real app we might scope this more tightly, but for now this works.
     val registerViewModel: RegisterViewModel = hiltViewModel()
     val registerState by registerViewModel.uiState.collectAsState()
 
+    // Gates post-auth navigation: a signed-in user without an active subscription is routed
+    // to PlanSelection instead of Main, whether they just logged in, just registered, or the
+    // app cold-started straight past Splash (see SplashViewModel for the cold-start case).
+    val subscriptionGateViewModel: SubscriptionGateViewModel = hiltViewModel()
+    val navigateAfterAuth: suspend () -> Unit = {
+        val destination = if (subscriptionGateViewModel.isSubscribed()) AppRoute.Main else AppRoute.PlanSelection
+        backStack.clear()
+        backStack.add(destination)
+    }
+
     LaunchedEffect(Unit) {
         registerViewModel.effect.collect { effect ->
             when (effect) {
                 is RegisterEffect.NavigateToHome -> {
-                    backStack.clear()
-                    backStack.add(AppRoute.Main)
+                    navigateAfterAuth()
                 }
                 is RegisterEffect.NavigateToLogin -> {
                     backStack.clear()
@@ -142,8 +164,7 @@ fun AppNavHost(
                     loginViewModel.effect.collect { effect ->
                         when (effect) {
                             is LoginEffect.NavigateToHome -> {
-                                backStack.clear()
-                                backStack.add(AppRoute.Main)
+                                navigateAfterAuth()
                             }
                             is LoginEffect.NavigateToSignUp -> {
                                 backStack.add(AppRoute.SignUp1)
@@ -245,6 +266,65 @@ fun AppNavHost(
                     onIntent = registerViewModel::onIntent
                 )
             }
+            is AppRoute.PlanSelection -> NavEntry(AppRoute.PlanSelection) {
+                val planSelectionViewModel: PlanSelectionViewModel = hiltViewModel()
+                val planSelectionState by planSelectionViewModel.state.collectAsState()
+                val context = LocalContext.current
+
+                val checkoutLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.StartActivityForResult()
+                ) { result ->
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        val data = result.data
+                        val rawFields = data?.getSerializableExtra(PaymobWebViewActivity.EXTRA_RAW_FIELDS) as? HashMap<String, String?>
+                        if (rawFields != null) {
+                            planSelectionViewModel.onIntent(
+                                PlanSelectionIntent.PaymentSdkFinished(
+                                    com.iti.mongez.org.domain.subscription.model.PaymentOutcome.Completed(rawFields)
+                                )
+                            )
+                        } else {
+                            planSelectionViewModel.onIntent(
+                                PlanSelectionIntent.PaymentSdkFinished(
+                                    com.iti.mongez.org.domain.subscription.model.PaymentOutcome.Cancelled
+                                )
+                            )
+                        }
+                    } else {
+                        planSelectionViewModel.onIntent(
+                            PlanSelectionIntent.PaymentSdkFinished(
+                                com.iti.mongez.org.domain.subscription.model.PaymentOutcome.Cancelled
+                            )
+                        )
+                    }
+                }
+
+                LaunchedEffect(Unit) {
+                    planSelectionViewModel.effect.collect { effect ->
+                        when (effect) {
+                            is PlanSelectionEffect.LaunchPaymobCheckout -> {
+                                val url = "https://accept.paymob.com/unifiedcheckout/?publicKey=${effect.session.publicKey}&clientSecret=${effect.session.clientSecret}"
+                                val intent = android.content.Intent(context, PaymobWebViewActivity::class.java).apply {
+                                    putExtra(PaymobWebViewActivity.EXTRA_URL, url)
+                                }
+                                checkoutLauncher.launch(intent)
+                            }
+                            is PlanSelectionEffect.ShowSnackbar -> {
+                                showSnackbar(effect.message, AppSnackbarType.Success)
+                            }
+                            PlanSelectionEffect.NavigateToMain -> {
+                                backStack.clear()
+                                backStack.add(AppRoute.Main)
+                            }
+                        }
+                    }
+                }
+
+                PlanSelectionScreen(
+                    state = planSelectionState,
+                    onIntent = planSelectionViewModel::onIntent,
+                )
+            }
                 is AppRoute.Main -> NavEntry(AppRoute.Main) {
                     MainScreen(
                         onNavigateToCourseDetails = { courseId -> backStack.add(AppRoute.CourseDetails(courseId)) },
@@ -296,7 +376,7 @@ fun AppNavHost(
         TopSnackbar(
             visible = snackbarVisible,
             message = snackbarMessage,
-            type = AppSnackbarType.Error,
+            type = snackbarType,
             modifier = Modifier.align(Alignment.TopCenter)
         )
     }
@@ -323,6 +403,7 @@ private fun serializeRoute(route: AppRoute): String {
         is AppRoute.LocationPicker -> "LocationPicker"
         is AppRoute.UnderReview -> "UnderReview"
         is AppRoute.Verified -> "Verified"
+        is AppRoute.PlanSelection -> "PlanSelection"
         is AppRoute.Main -> "Main"
         is AppRoute.Courses -> "Courses"
         is AppRoute.Events -> "Events"
@@ -345,6 +426,7 @@ private fun deserializeRoute(str: String): AppRoute {
         "LocationPicker" -> AppRoute.LocationPicker
         "UnderReview" -> AppRoute.UnderReview
         "Verified" -> AppRoute.Verified
+        "PlanSelection" -> AppRoute.PlanSelection
         "Main" -> AppRoute.Main
         "Courses" -> AppRoute.Courses
         "Events" -> AppRoute.Events

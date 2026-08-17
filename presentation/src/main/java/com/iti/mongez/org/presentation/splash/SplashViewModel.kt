@@ -4,16 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.iti.mongez.org.domain.auth.usecase.GetRegistrationProgressUseCase
 import com.iti.mongez.org.domain.auth.usecase.VerifyAuthTokenUseCase
+import com.iti.mongez.org.domain.subscription.model.SubscriptionState
+import com.iti.mongez.org.domain.subscription.usecase.ObserveSubscriptionStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class SplashRoute {
     object ToLogin : SplashRoute()
     data class ToSignUpStep(val step: Int) : SplashRoute()
+    object ToPlanSelection : SplashRoute()
     object ToMain : SplashRoute()
     object ToUnderReview : SplashRoute()
 }
@@ -21,7 +25,8 @@ sealed class SplashRoute {
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getRegistrationProgressUseCase: GetRegistrationProgressUseCase,
-    private val verifyAuthTokenUseCase: VerifyAuthTokenUseCase
+    private val verifyAuthTokenUseCase: VerifyAuthTokenUseCase,
+    private val observeSubscriptionStateUseCase: ObserveSubscriptionStateUseCase,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
@@ -42,7 +47,12 @@ class SplashViewModel @Inject constructor(
                 if (result is com.iti.mongez.org.domain.core.Result.Success) {
                     val isVerifiedOrg = true
                     if (isVerifiedOrg) {
-                        _route.value = SplashRoute.ToMain
+                        val subscriptionState = observeSubscriptionStateUseCase().first()
+                        _route.value = if (subscriptionState is SubscriptionState.Subscribed) {
+                            SplashRoute.ToMain
+                        } else {
+                            SplashRoute.ToPlanSelection
+                        }
                     } else {
                         _route.value = SplashRoute.ToUnderReview
                     }
