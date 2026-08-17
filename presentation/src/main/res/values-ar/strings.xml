@@ -59,6 +59,15 @@
     <string name="course_image_url">رابط صورة الدورة</string>
     <string name="course_material_platform">مادة هذه الدورة متوفرة على المنصة</string>
 
+    <!-- Profile -->
+    <string name="logout_confirmation_title">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+    <string name="logout_confirmation_desc">ستحتاج إلى إدخال اسم المستخدم وكلمة المرور لتسجيل الدخول مرة أخرى.</string>
+    <string name="logout_action">تسجيل الخروج</string>
+    <string name="dark_mode">الوضع الداكن</string>
+    <string name="language">اللغة</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="profile_avatar">الصورة الرمزية للملف الشخصي</string>
+
     <!-- Team Details Extras -->
     <string name="no_events_yet">لا توجد فعاليات بعد</string>
     <string name="no_events_desc">تابعنا لمعرفة الفعاليات والاجتماعات القادمة للفريق.</string>

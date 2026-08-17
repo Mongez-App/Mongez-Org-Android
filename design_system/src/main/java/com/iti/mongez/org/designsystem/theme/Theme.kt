@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import java.util.Locale
 import com.iti.mongez.org.designsystem.foundation.color.AppColorScheme
 import com.iti.mongez.org.designsystem.foundation.color.DarkColorScheme
 import com.iti.mongez.org.designsystem.foundation.color.LightColorScheme

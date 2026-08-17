@@ -8,20 +8,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.rounded.DarkMode
-import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.Translate
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.iti.mongez.org.designsystem.components.button.AppButtonVariant
+import com.iti.mongez.org.designsystem.components.dialog.AppConfirmationDialog
 import com.iti.mongez.org.designsystem.theme.Theme
+import com.iti.mongez.org.presentation.R
 import com.iti.mongez.presentation.profile.components.AvatarPickerDialog
 import com.iti.mongez.presentation.profile.components.SettingItem
 
@@ -33,7 +38,13 @@ fun ProfileScreen(
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchProfileData() // Replace with the actual name of your fetch function
+        viewModel.processIntent(ProfileIntent.FetchProfileData)
+
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is ProfileEffect.NavigateToLogin -> onNavigateToLogin()
+            }
+        }
     }
 
     Surface(
@@ -56,13 +67,13 @@ fun ProfileScreen(
                     .padding(4.dp)
                     .clip(CircleShape)
                     .background(Theme.colorScheme.brand.primaryContainer)
-                    .clickable { viewModel.onAvatarClicked(true) },
+                    .clickable { viewModel.processIntent(ProfileIntent.ToggleAvatarDialog(true)) },
                 contentAlignment = Alignment.Center
             ) {
                 if (state.avatarUrl != null) {
                     AsyncImage(
                         model = state.avatarUrl,
-                        contentDescription = "Profile Avatar",
+                        contentDescription = stringResource(R.string.profile_avatar),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
@@ -105,11 +116,11 @@ fun ProfileScreen(
                     icon = Icons.Rounded.DarkMode,
                     iconContainerColor = Theme.colorScheme.brand.primaryContainer,
                     iconTint = Theme.colorScheme.brand.primary,
-                    title = "Dark Mode",
+                    title = stringResource(R.string.dark_mode),
                     action = {
                         Switch(
                             checked = state.isDarkMode,
-                            onCheckedChange = { viewModel.onDarkModeChanged(it) }
+                            onCheckedChange = { viewModel.processIntent(ProfileIntent.ToggleDarkMode(it)) }
                         )
                     }
                 )
@@ -121,7 +132,7 @@ fun ProfileScreen(
                     icon = Icons.Rounded.Translate,
                     iconContainerColor = Theme.colorScheme.brand.primaryContainer,
                     iconTint = Theme.colorScheme.brand.primary,
-                    title = "Language",
+                    title = stringResource(R.string.language),
                     action = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -141,7 +152,7 @@ fun ProfileScreen(
                                 )
                             }
                             Icon(
-                                imageVector = Icons.Rounded.KeyboardArrowRight,
+                                imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                                 contentDescription = null,
                                 tint = Theme.colorScheme.text.secondary
                             )
@@ -149,7 +160,7 @@ fun ProfileScreen(
                     },
                     onClick = {
                         val nextLang = if (state.currentLanguage == "EN") "AR" else "EN"
-                        viewModel.onLanguageSelected(nextLang)
+                        viewModel.processIntent(ProfileIntent.SelectLanguage(nextLang))
                     }
                 )
 
@@ -160,17 +171,17 @@ fun ProfileScreen(
                     icon = Icons.AutoMirrored.Rounded.Logout,
                     iconContainerColor = Theme.colorScheme.state.errorContainer,
                     iconTint = Theme.colorScheme.state.error,
-                    title = "Logout",
+                    title = stringResource(R.string.logout),
                     titleColor = Theme.colorScheme.state.error,
                     action = {
                         Icon(
-                            imageVector = Icons.Rounded.KeyboardArrowRight,
+                            imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                             contentDescription = null,
                             tint = Theme.colorScheme.text.secondary
                         )
                     },
                     onClick = {
-                        viewModel.onLogoutClicked(true)
+                        viewModel.processIntent(ProfileIntent.ToggleLogoutDialog(true))
                     }
                 )
 
@@ -182,33 +193,42 @@ fun ProfileScreen(
         if (state.showAvatarDialog) {
             AvatarPickerDialog(
                 selectedAvatarUrl = state.avatarUrl,
-                onAvatarSelected = { viewModel.onAvatarSelected(it) },
-                onRemoveAvatar = { viewModel.onRemoveAvatar() },
-                onDismiss = { viewModel.onAvatarClicked(false) }
+                onAvatarSelected = { viewModel.processIntent(ProfileIntent.SelectAvatar(it)) },
+                onRemoveAvatar = { viewModel.processIntent(ProfileIntent.RemoveAvatar) },
+                onDismiss = { viewModel.processIntent(ProfileIntent.ToggleAvatarDialog(false)) }
             )
         }
 
         // Logout Confirmation Dialog
         if (state.showLogoutDialog) {
-            AlertDialog(
-                onDismissRequest = { viewModel.onLogoutClicked(false) },
-                title = { Text(text = "Logout") },
-                text = { Text(text = "Are you sure you want to logout?") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            viewModel.onLogoutClicked(false)
-                            onNavigateToLogin()
-                        }
+            AppConfirmationDialog(
+                title = stringResource(R.string.logout_confirmation_title),
+                description = stringResource(R.string.logout_confirmation_desc),
+                secondaryActionText = stringResource(R.string.logout_action),
+                onSecondaryAction = { viewModel.processIntent(ProfileIntent.ConfirmLogout) },
+                onDismiss = { viewModel.processIntent(ProfileIntent.ToggleLogoutDialog(false)) },
+                primaryActionText = stringResource(R.string.action_cancel),
+                onPrimaryAction = { viewModel.processIntent(ProfileIntent.ToggleLogoutDialog(false)) },
+                isHorizontal = true,
+                secondaryActionVariant = AppButtonVariant.Secondary,
+                primaryActionVariant = AppButtonVariant.Primary,
+                primaryActionShowShadow = false,
+                illustration = {
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .background(
+                                color = Theme.colorScheme.state.errorContainer.copy(alpha = 0.2f),
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(text = "Logout", color = Theme.colorScheme.state.error)
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = { viewModel.onLogoutClicked(false) }
-                    ) {
-                        Text(text = "Cancel")
+                        Icon(
+                            imageVector = Icons.Rounded.Warning,
+                            contentDescription = null,
+                            tint = Theme.colorScheme.state.error,
+                            modifier = Modifier.size(32.dp)
+                        )
                     }
                 }
             )

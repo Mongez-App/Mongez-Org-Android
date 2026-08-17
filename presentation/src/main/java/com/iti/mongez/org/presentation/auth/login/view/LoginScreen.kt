@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iti.mongez.org.designsystem.R
@@ -82,6 +84,7 @@ fun LoginScreen(
             label = stringResource(R.string.login_email_label),
             placeholder = stringResource(R.string.login_email_hint),
             leadingIcon = ImageVector.vectorResource(id = R.drawable.ic_email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             isError = uiState.emailError != null,
             errorMessage = uiState.emailError,
             modifier = Modifier.fillMaxWidth()

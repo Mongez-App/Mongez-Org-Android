@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":presentation"))
 
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.core.splashscreen)
