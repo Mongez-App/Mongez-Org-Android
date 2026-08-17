@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     if (!isLoading) {
                         val initialBackStack = when (routeState) {
                             is SplashRoute.ToLogin -> listOf(AppRoute.Login)
+                            is SplashRoute.ToPlanSelection -> listOf(AppRoute.PlanSelection)
                             is SplashRoute.ToMain -> listOf(AppRoute.Main)
                             is SplashRoute.ToUnderReview -> listOf(AppRoute.UnderReview)
                             is SplashRoute.ToSignUpStep -> {

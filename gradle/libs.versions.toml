@@ -33,6 +33,11 @@ playServicesMaps = "19.0.0"
 playServicesLocation = "21.3.0"
 mapsCompose = "6.1.1"
 places = "4.0.0"
+# Paymob native checkout SDK - PAUSED, not currently used by any module (see
+# presentation/build.gradle.kts and docs/PAYMOB_INTEGRATION.md). gitlab.com/paymob-public/paymobsdk
+# is Paymob's iOS SDK, not Android; no working public Gradle coordinate was found for the
+# Android one. Replace group/name/version below once you have the real artifact from Paymob.
+paymobSdk = "1.6.0"
 
 [libraries]
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -82,6 +87,8 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 maps-compose = { group = "com.google.maps.android", name = "maps-compose", version.ref = "mapsCompose" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+# Paymob native checkout SDK (see [versions].paymobSdk note above)
+paymob-sdk = { group = "com.gitlab.paymob-public", name = "paymobsdk", version.ref = "paymobSdk" }
 
 # Dependencies of the convention plugins
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

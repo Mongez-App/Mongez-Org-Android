@@ -57,7 +57,6 @@ class RegisterViewModel @Inject constructor(
             _uiState.collect { state ->
                 val json = gson.toJson(state)
                 saveDraftUseCase(json)
-                saveRegistrationProgressUseCase(state.currentStep)
             }
         }
     }
@@ -140,7 +139,10 @@ class RegisterViewModel @Inject constructor(
             result.fold(
                 onSuccess = {
                     _uiState.update { it.copy(currentStep = 2) }
-                    _effect.emit(RegisterEffect.NavigateToStep(2))
+                    viewModelScope.launch {
+                        saveRegistrationProgressUseCase(2)
+                        _effect.emit(RegisterEffect.NavigateToStep(2))
+                    }
                 },
                 onFailure = { error ->
                     val message = (error as? AppException)?.toFriendlyMessage() ?: error.message ?: "Unknown Error"
@@ -168,7 +170,10 @@ class RegisterViewModel @Inject constructor(
         if (hasError) return
         
         _uiState.update { it.copy(currentStep = 3) }
-        viewModelScope.launch { _effect.emit(RegisterEffect.NavigateToStep(3)) }
+        viewModelScope.launch { 
+            saveRegistrationProgressUseCase(3)
+            _effect.emit(RegisterEffect.NavigateToStep(3)) 
+        }
     }
 
     private fun handleStep3Next() {
@@ -184,7 +189,10 @@ class RegisterViewModel @Inject constructor(
         if (hasError) return
         
         _uiState.update { it.copy(currentStep = 4) }
-        viewModelScope.launch { _effect.emit(RegisterEffect.NavigateToStep(4)) }
+        viewModelScope.launch { 
+            saveRegistrationProgressUseCase(4)
+            _effect.emit(RegisterEffect.NavigateToStep(4)) 
+        }
     }
 
     private fun handleStep4Submit() {
@@ -211,6 +219,7 @@ class RegisterViewModel @Inject constructor(
                     isReviewComplete = true
                 )
             }
+            saveRegistrationProgressUseCase(5)
             _effect.emit(RegisterEffect.NavigateToStep(5))
             delay(2000)
             _uiState.update { it.copy(isAccepted = true) }

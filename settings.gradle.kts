@@ -22,6 +22,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // Kept for whenever the real Paymob Android SDK artifact is added (currently paused -
+        // see docs/PAYMOB_INTEGRATION.md). Not required by anything that's active right now.
+        maven { url = uri("https://jitpack.io") }
     }
 }
 

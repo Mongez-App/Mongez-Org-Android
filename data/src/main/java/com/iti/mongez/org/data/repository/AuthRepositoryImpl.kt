@@ -38,6 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
             android.util.Log.d("AuthRepository", "Firebase Token : $token")
             authProgressDataStore.saveToken(token)
             authProgressDataStore.saveStep(5)
+            authProgressDataStore.saveDraft("")
             
             val response = authApi.login()
             response.data?.toDomain() ?: throw AppException.UnknownException("Login returned empty data")
