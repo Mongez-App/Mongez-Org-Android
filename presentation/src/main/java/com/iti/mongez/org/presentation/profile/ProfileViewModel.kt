@@ -19,12 +19,8 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    init {
-        fetchProfileData()
-    }
 
-
-    private fun fetchProfileData() {
+    fun fetchProfileData() {
         viewModelScope.launch {
             getProfileUseCase().collect { result ->
                 result.onSuccess { profile -> // <--- Make sure this is expecting 'profile'

@@ -32,6 +32,10 @@ fun ProfileScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchProfileData() // Replace with the actual name of your fetch function
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Theme.colorScheme.surface.background
