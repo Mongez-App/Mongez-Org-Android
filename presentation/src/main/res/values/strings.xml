@@ -65,6 +65,15 @@
     <string name="no_members_yet">No Members Yet</string>
     <string name="no_members_desc">Invite your team members to join this team.</string>
 
+    <!-- Profile -->
+    <string name="logout_confirmation_title">Are sure you want to log out?</string>
+    <string name="logout_confirmation_desc">You will need to enter your username and password to sign back in.</string>
+    <string name="logout_action">Logout</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="language">Language</string>
+    <string name="logout">Logout</string>
+    <string name="profile_avatar">Profile Avatar</string>
+
     <!-- Additional Course Details Strings -->
     <string name="tab_materials">Materials</string>
     <string name="tab_tasks">Tasks</string>

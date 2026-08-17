@@ -11,7 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -42,7 +45,12 @@ import kotlin.time.Duration.Companion.milliseconds
 fun AppNavHost(
     initialBackStack: List<AppRoute>
 ) {
-    val backStack = remember { mutableStateListOf(*initialBackStack.toTypedArray()) }
+    val backStack = rememberSaveable(
+        saver = listSaver<SnapshotStateList<AppRoute>, String>(
+            save = { it.map { route -> serializeRoute(route) } },
+            restore = { mutableStateListOf(*it.map { str -> deserializeRoute(str) }.toTypedArray()) }
+        )
+    ) { mutableStateListOf(*initialBackStack.toTypedArray()) }
     
     var snackbarVisible by remember { mutableStateOf(false) }
     var snackbarMessage by remember { mutableStateOf("") }
@@ -301,5 +309,49 @@ private fun PlaceholderScreen(screenName: String) {
         contentAlignment = Alignment.Center
     ) {
         Text(text = screenName)
+    }
+}
+
+private fun serializeRoute(route: AppRoute): String {
+    return when (route) {
+        is AppRoute.Onboarding -> "Onboarding"
+        is AppRoute.Login -> "Login"
+        is AppRoute.SignUp1 -> "SignUp1"
+        is AppRoute.SignUp2 -> "SignUp2"
+        is AppRoute.SignUp3 -> "SignUp3"
+        is AppRoute.SignUp4 -> "SignUp4"
+        is AppRoute.LocationPicker -> "LocationPicker"
+        is AppRoute.UnderReview -> "UnderReview"
+        is AppRoute.Verified -> "Verified"
+        is AppRoute.Main -> "Main"
+        is AppRoute.Courses -> "Courses"
+        is AppRoute.Events -> "Events"
+        is AppRoute.Tasks -> "Tasks"
+        is AppRoute.MagicBox -> "MagicBox"
+        is AppRoute.TeamDetails -> "TeamDetails|${route.teamId}|${route.teamName}"
+        is AppRoute.CourseDetails -> "CourseDetails|${route.courseId}"
+    }
+}
+
+private fun deserializeRoute(str: String): AppRoute {
+    val parts = str.split("|")
+    return when (parts[0]) {
+        "Onboarding" -> AppRoute.Onboarding
+        "Login" -> AppRoute.Login
+        "SignUp1" -> AppRoute.SignUp1
+        "SignUp2" -> AppRoute.SignUp2
+        "SignUp3" -> AppRoute.SignUp3
+        "SignUp4" -> AppRoute.SignUp4
+        "LocationPicker" -> AppRoute.LocationPicker
+        "UnderReview" -> AppRoute.UnderReview
+        "Verified" -> AppRoute.Verified
+        "Main" -> AppRoute.Main
+        "Courses" -> AppRoute.Courses
+        "Events" -> AppRoute.Events
+        "Tasks" -> AppRoute.Tasks
+        "MagicBox" -> AppRoute.MagicBox
+        "TeamDetails" -> AppRoute.TeamDetails(parts[1], parts[2])
+        "CourseDetails" -> AppRoute.CourseDetails(parts[1])
+        else -> AppRoute.Login
     }
 }

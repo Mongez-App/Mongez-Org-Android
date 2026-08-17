@@ -424,6 +424,47 @@ fun TeamDetailsScreenContentDarkPreview() {
     }
 }
 
+@Preview(showBackground = true, name = "Team Details - Members Tab")
+@Composable
+fun TeamDetailsMembersTabPreview() {
+    val sampleTeam = Team(
+        id = "1",
+        name = "Mobile Native",
+        description = "Core Mobile Development Team",
+        membersCount = 15
+    )
+
+    val sampleMembers = listOf(
+        Member(id = "1", name = "Ahmed Ali", role = "Lead Android Developer"),
+        Member(id = "2", name = "Sara Jones", role = "UI/UX Designer")
+    )
+
+    val samplePendingMembers = listOf(
+        Member(id = "3", name = "John Doe", role = "Applicant"),
+        Member(id = "4", name = "Jane Smith", role = "Applicant")
+    )
+
+    val state = TeamDetailsUiState(
+        isLoading = false,
+        team = sampleTeam,
+        members = sampleMembers,
+        pendingMembers = samplePendingMembers,
+        selectedTabIndex = 2
+    )
+
+    MongezTheme {
+        Surface(color = Theme.colorScheme.surface.background) {
+            TeamDetailsScreenContent(
+                state = state,
+                innerPadding = PaddingValues(0.dp),
+                onIntent = {},
+                onNavigateBack = {},
+                onNavigateToCourseDetails = {}
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true, name = "Team Details - Empty Courses")
 @Composable
 fun TeamDetailsEmptyCoursesPreview() {

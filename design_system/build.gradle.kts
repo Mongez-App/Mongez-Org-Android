@@ -7,5 +7,6 @@ android {
 }
 
 dependencies {
-    // Other specific dependencies for design_system can go here
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.splashscreen)
 }
