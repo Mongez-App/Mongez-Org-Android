@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -105,14 +106,14 @@ fun LoginScreen(
         
         Spacer(modifier = Modifier.height(Theme.spacing.sm))
         
-        Text(
-            text = stringResource(R.string.login_forgot_password),
-            color = Theme.colorScheme.brand.primary,
-            style = Theme.typography.body.large,
-            modifier = Modifier
-                .align(Alignment.End)
-                .clickable { onIntent(LoginIntent.OnForgotPasswordClicked) }
-        )
+//        Text(
+//            text = stringResource(R.string.login_forgot_password),
+//            color = Theme.colorScheme.brand.primary,
+//            style = Theme.typography.body.large,
+//            modifier = Modifier
+//                .align(Alignment.End)
+//                .clickable { onIntent(LoginIntent.OnForgotPasswordClicked) }
+//        )
 
         Spacer(modifier = Modifier.height(Theme.spacing.xl))
 
@@ -138,6 +139,7 @@ fun LoginScreen(
                 color = Theme.colorScheme.text.secondary,
                 style = Theme.typography.body.large
             )
+            Spacer(modifier = Modifier.width(Theme.spacing.sm))
             Text(
                 text = stringResource(R.string.login_sign_up),
                 color = Theme.colorScheme.brand.primary,

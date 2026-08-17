@@ -205,7 +205,12 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             // TODO: call submitOrganizationReviewUseCase
-            _uiState.update { it.copy(isLoading = false, currentStep = 5, isReviewComplete = true) }
+            _uiState.update { 
+                RegisterUiState(
+                    currentStep = 5,
+                    isReviewComplete = true
+                )
+            }
             _effect.emit(RegisterEffect.NavigateToStep(5))
             delay(2000)
             _uiState.update { it.copy(isAccepted = true) }

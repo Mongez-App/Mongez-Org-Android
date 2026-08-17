@@ -90,6 +90,7 @@ class LoginViewModel @Inject constructor(
             
             result.fold(
                 onSuccess = {
+                    _uiState.update { it.copy(email = "", password = "") }
                     _effect.emit(LoginEffect.NavigateToHome)
                 },
                 onFailure = { error ->
